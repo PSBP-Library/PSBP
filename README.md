@@ -691,10 +691,18 @@ private[psbp] trait Computation[C[+ _]]
   with Binding[C]
 ```
 
+## `ProgramFromComputation`
+
+```scala
+package psbp.external.implementation.computation
+
+private[psbp] type ProgramFromComputation[C[+ _]] = [Z, Y] =>> Z => C[Y]
+```
+
 ## `programFromComputation`
 
 ```scala
-package psbp.external.givens.computation
+package psbp.external.implementation.computation.givens
 
 import psbp.external.specification.types.{ 
   &&
@@ -707,15 +715,17 @@ import psbp.external.specification.program.Program
 
 import psbp.internal.specification.computation.Computation
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 private[psbp] given programFromComputation[
-  C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]
+  C[+ _]: Computation]: Program[ProgramFromComputation[C]
 ] with
   
   private val computation: Computation[C] = 
     summon[Computation[C]]
   import computation.result
 
-  private type `=>C`[-Z, +Y] = Z => C[Y]
+  private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
 
   // defined
 
@@ -748,7 +758,7 @@ private[psbp] given programFromComputation[
   override def conditionally[Z, Y, X](
       `y>-->z`: => Y `=>C` Z, 
       `x>-->z`: => X `=>C` Z): (Y || X) `=>C` Z =
-    foldSum(`y>-->z`, `x>-->z`) 
+    foldSum(`y>-->z`, `x>-->z`)
 ```
 
 ## `NaturalTransformation`
@@ -798,6 +808,802 @@ private[psbp] trait ComputationTransformation[F[+ _]: Resulting, T[+ _]]
     `z=>fz` andThen `fz=>tz` 
 ```
 
+## `ReadingTransformed`
+
+```scala
+package psbp.internal.implementation.computation.transformation.reading
+
+private[psbp] type ReadingTransformed[
+  R
+  , C[+ _]
+] = [Y] =>> R ?=> C[Y] 
+```
+
+## `readingTransformedReading`
+
+```scala
+package psbp.internal.implementation.computation.transformation.reading.givens
+
+import psbp.external.specification.reading.{
+  Readable
+  , Reading
+}
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+private[psbp] given readingTransformedReading[
+  R: Readable
+  , C[+ _]: Computation
+]: Reading[
+  R
+  , [Z, Y] =>> Z => ReadingTransformed[R, C][Y]
+] with
+
+  private type F[+Y] = C[Y]
+  private type T[+Y] = ReadingTransformed[R, C][Y]
+
+  private type `=>T` = [Z, Y] =>> Z => T[Y]
+
+  private val computation: Computation[F] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+  }
+
+  override def read: Unit `=>T` R =
+    _ =>
+      val r: R = summon[R]
+      resultF(r)
+```
+
+## `readingTransformedComputation`
+
+```scala
+package psbp.internal.implementation.computation.transformation.reading.givens
+
+import psbp.external.specification.reading.Readable
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.internal.specification.naturalTransformation.~>
+
+import psbp.internal.specification.computation.transformation.ComputationTransformation
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+private[psbp] given readingTransformedComputation[
+  R: Readable
+  , C[+ _]: Computation
+]: ComputationTransformation[C, ReadingTransformed[R, C]] 
+  with Computation[ReadingTransformed[R, C]] with
+
+  private type F[+Y] = C[Y]
+  private type T[+Y] = ReadingTransformed[R, C][Y]
+
+  private type `=>T` = [Z, Y] =>> Z => T[Y]
+
+  private val computation: Computation[F] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+    , bind => bindF
+  }
+
+  override private[psbp] val `f~>t`: F ~> T = 
+    new {
+      def apply[Z]: F[Z] => T[Z] =
+        fz =>
+          bindF(fz, z => resultF(z))
+    }  
+
+  override private[psbp] def bind[Z, Y](
+    tz: T[Z]
+    , `z>=ty`: => Z => T[Y]
+  ): T[Y] =
+    bindF(tz, z => `z>=ty`(z) )
+```
+
+## `readingTransformedMaterialization`
+
+```scala
+package psbp.internal.implementation.computation.transformation.reading.givens
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+import psbp.internal.specification.computation.Computation
+
+private[psbp] given readingTransformedMaterialization[
+  R: Readable
+  , C[+ _]: Computation
+          : [C[+ _]] =>> Materialization[[Z, Y] =>> Z => C[Y], Z, Y]
+  , Z, Y
+]: Materialization[[Z, Y] =>> Z => ReadingTransformed[R, C][Y], Z, R ?=> C[Y]] with
+
+  private type F[+Z] = C[Z]
+  private type T[+Z] = ReadingTransformed[R, C][Z]
+
+  private type `=>F`[-Z, +Y] = Z => F[Y]
+  private type `=>T`[-Z, +Y] = Z => T[Y]
+
+  private val Materialization: Materialization[`=>F`, Z, Y] = 
+    summon[Materialization[`=>F`, Z, Y]]
+  import Materialization.{ 
+    materialize => materializeF 
+  }
+
+  private val computation: Computation[C] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+    , bind => bindF 
+  }
+
+  override val materialize: (Unit `=>T` Unit) => Z ?=> (R ?=> C[Y]) =
+    `u=>tu` =>
+      bindF(
+        `u=>tu`(())
+        , _ => 
+            resultF(materializeF(resultF))
+      )
+```
+
+## `WritingTransformed`
+
+```scala
+package psbp.internal.implementation.computation.transformation.writing
+
+import psbp.external.specification.types.&&
+
+private[psbp] type WritingTransformed[
+  W
+  , C[+ _]
+] = [Y] =>> C[W && Y] 
+```
+
+## `writingTransformedWriting`
+
+```scala
+package psbp.internal.implementation.computation.transformation.writing.givens
+
+import psbp.external.specification.writing.{
+  Writable
+  , Writing
+}
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
+
+private[psbp] given writingTransformedWriting[
+  W: Writable
+  , C[+ _]: Computation
+]: Writing[
+  W
+  , [Z, Y] =>> Z => WritingTransformed[W, C][Y]
+] with
+
+  private type F[+Y] = C[Y]
+  private type T[+Y] = WritingTransformed[W, C][Y]
+
+  private type `=>T` = [Z, Y] =>> Z => T[Y]
+
+  private val computation: Computation[F] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+  }
+
+  override def write: W `=>T` Unit =
+    w =>
+      resultF((w, ()))
+```
+
+## `writingTransformedComputation`
+
+```scala
+package psbp.internal.implementation.computation.transformation.writing.givens
+
+import psbp.external.specification.types.&&
+
+import psbp.external.specification.writing.Writable
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.internal.specification.naturalTransformation.~>
+
+import psbp.internal.specification.computation.transformation.ComputationTransformation
+
+import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
+
+private[psbp] given writingTransformedComputation[
+  W : Writable
+  , C[+ _]: Computation
+]: ComputationTransformation[C,  WritingTransformed[W, C]] 
+  with Computation[[Y] =>> WritingTransformed[W, C][Y]] with 
+
+  private type F[+Y] = C[Y]
+  private type T[+Y] = WritingTransformed[W, C][Y]
+
+  private type `=>T` = [Z, Y] =>> Z => T[Y]
+
+  private val computation: Computation[F] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+    , bind => bindF
+  }
+
+  private val writable: Writable[W] = summon[Writable[W]]
+  import writable.{
+    empty
+    , append
+  }  
+
+  override private[psbp] val `f~>t`: F ~> T = new {
+    def apply[Z]: F[Z] => T[Z] =
+      fz =>
+        bindF(fz, z => resultF((empty, z)))
+  }  
+
+  override private[psbp] def bind[Z, Y](
+    tz: T[Z]
+    , `z=>ty`: => Z => T[Y]
+  ): T[Y] =
+    bindF(tz, (w1, z) =>
+      val (w2, y): W && Y = `z=>ty`(z)
+      resultF(append(w1, w2), y)
+    )
+```
+
+## `writingTransformedMaterialization`
+
+```scala
+package psbp.internal.implementation.computation.transformation.writing.givens
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
+
+import psbp.internal.specification.computation.Computation
+
+private[psbp] given writingTransformedMaterialization[
+  W: Writable
+  , C[+ _]: Computation
+          : [C[+ _]] =>> Materialization[[Z, Y] =>> Z => C[Y], Z, Y]
+  , Z, Y
+]: Materialization[[Z, Y] =>> Z => WritingTransformed[W, C][Y], Z, C[(W, Y)]] with
+
+  private type F[+Z] = C[Z]
+  private type T[+Z] = WritingTransformed[W, C][Z]
+
+  private type `=>F`[-Z, +Y] = Z => F[Y]
+  private type `=>T`[-Z, +Y] = Z => T[Y]
+
+  private val Materialization: Materialization[`=>F`, Z, Y] = 
+    summon[Materialization[`=>F`, Z, Y]]
+  import Materialization.{ 
+    materialize => materializeF 
+  }
+
+  private val computation: Computation[C] = 
+    summon[Computation[F]]
+  import computation.{ 
+    result => resultF
+    , bind => bindF 
+  }  
+
+  override val materialize: (Unit `=>T` Unit) => Z ?=> C[(W, Y)] =
+    `u=>tu` =>
+      bindF(
+        `u=>tu`(())
+        , (w, u) =>
+            resultF((w, materializeF(resultF)))
+      )
+```
+
+## `readingTransformedWriting`
+
+```scala
+package psbp.internal.implementation.computation.transformation.writing.reading.givens
+
+import psbp.external.specification.reading.{
+  Readable
+  , Reading
+}
+
+import psbp.external.specification.writing.{
+  Writable
+  , Writing
+}
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+private[psbp] given readingTransformedWriting[
+  R: Readable
+  , W: Writable
+  , C[+ _]: [C[+ _]] =>> Writing[W, [Z, Y] =>> Z => C[Y]]
+]: Writing[
+  W
+  , [Z, Y] =>> Z => ReadingTransformed[R, C][Y]
+] with
+
+  private type F[+Y] = C[Y]
+  private type T[+Y] = ReadingTransformed[R, C][Y]
+
+  private type `=>F` = [Z, Y] =>> Z => F[Y]
+  private type `=>T` = [Z, Y] =>> Z => T[Y]
+
+  private val writing: Writing[W, `=>F`] = 
+    summon[Writing[W, `=>F`]]
+  import writing.{
+    write => writeF
+  }
+
+  override def write: W `=>T` Unit =
+    w =>
+      writeF(w)
+```
+
+## `Active`
+
+```scala
+package psbp.external.implementation.active
+
+type Active[+Y] = Y
+
+type `=>A`[-Z, +Y] = Z => Active[Y]
+```
+
+## ``
+
+```scala
+package psbp.external.implementation.active.givens
+
+import psbp.external.specification.program.Program
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.external.implementation.computation.givens.programFromComputation
+
+import psbp.external.implementation.active.{
+  Active
+  , `=>A`
+}
+
+private[psbp] given activeComputation: Computation[Active] with
+
+  private[psbp] def result[Z]: Z => Active[Z] =
+    z =>
+      z
+
+  private[psbp] def bind[Z, Y](
+    cz: Active[Z]
+    , `z=>cy`: => Z => Active[Y]
+  ): Active[Y] =
+    `z=>cy`(cz)
+
+given activeProgram: Program[`=>A`] = 
+  programFromComputation[Active]
+```
+
+## `activeProgram`
+
+```scala
+package psbp.external.implementation.active.givens
+
+import psbp.external.specification.program.Program
+
+import psbp.internal.specification.computation.Computation
+
+import psbp.external.implementation.computation.givens.programFromComputation
+
+import psbp.external.implementation.active.{
+  Active
+  , `=>A`
+}
+
+private[psbp] given activeComputation: Computation[Active] with
+
+  private[psbp] def result[Z]: Z => Active[Z] =
+    z =>
+      z
+
+  private[psbp] def bind[Z, Y](
+    cz: Active[Z]
+    , `z=>cy`: => Z => Active[Y]
+  ): Active[Y] =
+    `z=>cy`(cz)
+
+given activeProgram: Program[`=>A`] = 
+  programFromComputation[Active]
+```
+
+## `activeMaterialization`
+
+```scala
+package psbp.external.implementation.active.givens
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.external.implementation.active.`=>A`
+
+given activeMaterialization: Materialization[`=>A`, Unit, Unit] with
+  val materialize: (Unit `=>A` Unit) => Unit ?=> Unit =
+    `u>-->u` => 
+      val u = summon[Unit]
+      `u>-->u`(u)
+```
+
+## `ActiveReading`
+
+```scala
+package psbp.external.implementation.active.reading
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+import psbp.external.implementation.active.Active
+
+type ActiveReading[R] = [Y] =>> ReadingTransformed[R, Active][Y] 
+
+type `=>AR`[R] = [Z, Y] =>> Z => ActiveReading[R][Y]
+```
+
+## `activeReadingReading`
+
+```scala
+package psbp.external.implementation.active.reading.givens
+
+import psbp.external.specification.reading.{
+  Readable
+  , Reading
+}
+
+import psbp.external.implementation.active.Active
+
+// givens
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
+
+import psbp.external.implementation.active.reading.`=>AR`
+
+given activeReadingReading[R: Readable]: Reading[R, `=>AR`[R]] = 
+  readingTransformedReading[R, Active]
+```
+
+## `activeReadingProgram`
+
+```scala
+package psbp.external.implementation.active.reading.givens
+
+import psbp.external.specification.program.Program
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.reading.{
+    ActiveReading, `=>AR`
+}
+
+import psbp.internal.specification.computation.Computation
+
+// givens
+
+import psbp.external.implementation.computation.givens.programFromComputation
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
+
+private[psbp] given activeReadingComputation[R: Readable]: Computation[ActiveReading[R]] = 
+  readingTransformedComputation[R, Active]
+
+given activeReadingProgram[R: Readable]: Program[`=>AR`[R]] =
+  programFromComputation[ActiveReading[R]]
+```
+
+## `activeReadingMaterialization`
+
+```scala
+package psbp.external.implementation.active.reading.givens
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.reading.`=>AR`
+
+// givens
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.external.implementation.active.givens.activeMaterialization
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedMaterialization
+
+given activeReadingMaterialization[R: Readable]: Materialization[`=>AR`[R], Unit, R ?=> Unit] =
+  readingTransformedMaterialization[R, Active, Unit, Unit]
+```
+
+## `ActiveWriting`
+
+```scala
+package psbp.external.implementation.active.writing
+
+import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
+
+import psbp.external.implementation.active.Active
+
+type ActiveWriting[W] = [Y] =>> WritingTransformed[W, Active][Y] 
+
+type `=>AW`[W] = [Z, Y] =>> Z => ActiveWriting[W][Y]
+```
+
+## `activeWritingWriting`
+
+```scala
+package psbp.external.implementation.active.writing.givens
+
+import psbp.external.specification.writing.{
+  Writable
+  , Writing
+}
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.writing.`=>AW`
+
+// givens
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.internal.implementation.computation.transformation.writing.givens.writingTransformedWriting
+
+given activeWritingWriting[W: Writable]: Writing[W, `=>AW`[W]] = 
+  writingTransformedWriting[W, Active]
+```
+
+## `activeWritingComputation`
+
+```scala
+package psbp.external.implementation.active.writing.givens
+
+import psbp.external.specification.program.Program
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.writing.{
+    ActiveWriting, `=>AW`
+}
+
+import psbp.internal.specification.computation.Computation
+
+// givens
+
+import psbp.external.implementation.computation.givens.programFromComputation
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.internal.implementation.computation.transformation.writing.givens.writingTransformedComputation
+
+private[psbp] given activeWritingComputation[W: Writable]: Computation[ActiveWriting[W]] = 
+  writingTransformedComputation[W, Active]
+
+given activeWritingProgram[W: Writable]: Program[`=>AW`[W]] =
+  programFromComputation[ActiveWriting[W]]
+```
+
+## `activeWritingMaterialization`
+
+```scala
+package psbp.external.implementation.active.writing.givens
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.writing.`=>AW`
+
+// givens
+
+import psbp.external.implementation.active.givens.activeComputation
+
+import psbp.external.implementation.active.givens.activeMaterialization
+
+import psbp.internal.implementation.computation.transformation.writing.givens.writingTransformedMaterialization
+
+given activeWritingMaterialization[W: Writable]: Materialization[`=>AW`[W], Unit, (W, Unit)] =
+  writingTransformedMaterialization[W, Active, Unit, Unit]
+```
+
+## `ActiveWritingReading`
+
+```scala
+package psbp.external.implementation.active.writing.reading
+
+import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
+
+import psbp.external.implementation.active.Active
+
+import psbp.external.implementation.active.writing.ActiveWriting
+
+type ActiveWritingReading[W, R] = [Y] =>> ReadingTransformed[R, ActiveWriting[W]][Y]
+
+type `=>AWR`[W, R] = [Z, Y] =>> Z => ActiveWritingReading[W, R][Y]
+```
+
+## `activeWritingReadingWriting`
+
+```scala
+package psbp.external.implementation.active.writing.reading.givens
+
+import psbp.external.specification.writing.{
+  Writable
+  , Writing
+}
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.implementation.active.writing.ActiveWriting
+
+import psbp.external.implementation.active.writing.reading.`=>AWR`
+
+// givens
+
+import psbp.internal.implementation.computation.transformation.writing.reading.givens.readingTransformedWriting
+
+import psbp.external.implementation.active.writing.givens.activeWritingWriting
+
+given activeWritingReadingWriting[
+  W: Writable
+  , R: Readable
+]: Writing[W, `=>AWR`[W, R]] = 
+  readingTransformedWriting[R, W, ActiveWriting[W]]
+```
+
+## `activeWritingReadingReading`
+
+```scala
+package psbp.external.implementation.active.writing.reading.givens
+
+import psbp.external.specification.reading.{
+  Readable
+  , Reading
+}
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.implementation.active.writing.ActiveWriting
+
+import psbp.external.implementation.active.writing.reading.`=>AWR`
+
+// givens
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
+
+import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+given activeWritingReadingReading[
+  W: Writable
+  , R: Readable
+]: Reading[R, `=>AWR`[W, R]] = 
+  readingTransformedReading[R, ActiveWriting[W]]
+```
+
+## `activeWritingReadingProgram`
+
+```scala
+package psbp.external.implementation.active.writing.reading.givens
+
+import psbp.external.specification.program.Program
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.implementation.active.writing.ActiveWriting
+
+import psbp.external.implementation.active.writing.reading.{
+  ActiveWritingReading
+  , `=>AWR`
+}
+
+import psbp.internal.specification.computation.Computation
+
+// givens
+
+import psbp.external.implementation.computation.givens.programFromComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
+
+import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+private[psbp] given activeWritingReadingComputation[
+  W: Writable
+  , R: Readable
+]: Computation[ActiveWritingReading[W, R]] = 
+  readingTransformedComputation[R, ActiveWriting[W]]
+
+given activeWritingReadingProgram[
+  W: Writable
+  , R: Readable
+]: Program[`=>AWR`[W, R]] = 
+  programFromComputation[ActiveWritingReading[W, R]]
+```
+
+## `activeWritingReadingMaterialization`
+
+```scala
+package psbp.external.implementation.active.writing.reading.givens
+
+import psbp.external.specification.reading.Readable
+
+import psbp.external.specification.writing.Writable
+
+import psbp.external.specification.materialization.Materialization
+
+import psbp.external.implementation.active.writing.ActiveWriting
+
+import psbp.external.implementation.active.writing.reading.{
+  ActiveWritingReading
+  , `=>AWR`
+}
+
+// givens
+
+import psbp.external.implementation.active.writing.givens.{
+  activeWritingComputation
+  , activeWritingMaterialization
+}  
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedMaterialization
+
+given activeWritingReadingMaterialization[
+  W: Writable
+  , R: Readable
+]: Materialization[
+  `=>AWR`[W, R]
+  , Unit
+  , R ?=> (W, (W, Unit))
+] = readingTransformedMaterialization[R, ActiveWriting[W], Unit, (W, Unit)]
+```
+
+## ``
+
+```scala
+
+```
+
+## ``
+
+```scala
+
+```
+
+## ``
+
+```scala
+
+```
+
 ## ``
 
 ```scala
@@ -822,6 +1628,23 @@ private[psbp] trait ComputationTransformation[F[+ _]: Resulting, T[+ _]]
 
 ```
 
+## ``
+
+```scala
+
+```
+
+## ``
+
+```scala
+
+```
+
+## ``
+
+```scala
+
+```
 
 
 

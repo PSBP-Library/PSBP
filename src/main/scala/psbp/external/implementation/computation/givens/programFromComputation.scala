@@ -1,4 +1,4 @@
-package psbp.external.givens.computation
+package psbp.external.implementation.computation.givens
 
 import psbp.external.specification.types.{ 
   &&
@@ -11,15 +11,17 @@ import psbp.external.specification.program.Program
 
 import psbp.internal.specification.computation.Computation
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 private[psbp] given programFromComputation[
-  C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]
+  C[+ _]: Computation]: Program[ProgramFromComputation[C]
 ] with
   
   private val computation: Computation[C] = 
     summon[Computation[C]]
   import computation.result
 
-  private type `=>C`[-Z, +Y] = Z => C[Y]
+  private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
 
   // defined
 
