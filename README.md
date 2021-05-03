@@ -1171,14 +1171,16 @@ package psbp.external.implementation.active.givens
 
 import psbp.external.specification.program.Program
 
-import psbp.internal.specification.computation.Computation
-
-import psbp.external.implementation.computation.givens.programFromComputation
-
 import psbp.external.implementation.active.{
   Active
   , `=>A`
 }
+
+import psbp.internal.specification.computation.Computation
+
+// givens
+
+import psbp.external.implementation.computation.givens.programFromComputation
 
 private[psbp] given activeComputation: Computation[Active] with
 
@@ -1468,9 +1470,9 @@ import psbp.external.implementation.active.writing.reading.`=>AWR`
 
 // givens
 
-import psbp.internal.implementation.computation.transformation.writing.reading.givens.readingTransformedWriting
-
 import psbp.external.implementation.active.writing.givens.activeWritingWriting
+
+import psbp.internal.implementation.computation.transformation.writing.reading.givens.readingTransformedWriting
 
 given activeWritingReadingWriting[
   W: Writable
@@ -1497,9 +1499,9 @@ import psbp.external.implementation.active.writing.reading.`=>AWR`
 
 // givens
 
-import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
-
 import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
 
 given activeWritingReadingReading[
   W: Writable
@@ -1532,9 +1534,9 @@ import psbp.internal.specification.computation.Computation
 
 import psbp.external.implementation.computation.givens.programFromComputation
 
-import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
-
 import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
 
 private[psbp] given activeWritingReadingComputation[
   W: Writable
@@ -1569,10 +1571,9 @@ import psbp.external.implementation.active.writing.reading.{
 
 // givens
 
-import psbp.external.implementation.active.writing.givens.{
-  activeWritingComputation
-  , activeWritingMaterialization
-}  
+import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.external.implementation.active.writing.givens.activeWritingMaterialization 
 
 import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedMaterialization
 

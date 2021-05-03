@@ -19,9 +19,9 @@ import psbp.internal.specification.computation.Computation
 
 import psbp.external.implementation.computation.givens.programFromComputation
 
-import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
-
 import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedComputation
 
 private[psbp] given activeWritingReadingComputation[
   W: Writable

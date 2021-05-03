@@ -15,10 +15,9 @@ import psbp.external.implementation.active.writing.reading.{
 
 // givens
 
-import psbp.external.implementation.active.writing.givens.{
-  activeWritingComputation
-  , activeWritingMaterialization
-}  
+import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.external.implementation.active.writing.givens.activeWritingMaterialization 
 
 import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedMaterialization
 

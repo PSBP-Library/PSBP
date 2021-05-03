@@ -2,14 +2,16 @@ package psbp.external.implementation.active.givens
 
 import psbp.external.specification.program.Program
 
-import psbp.internal.specification.computation.Computation
-
-import psbp.external.implementation.computation.givens.programFromComputation
-
 import psbp.external.implementation.active.{
   Active
   , `=>A`
 }
+
+import psbp.internal.specification.computation.Computation
+
+// givens
+
+import psbp.external.implementation.computation.givens.programFromComputation
 
 private[psbp] given activeComputation: Computation[Active] with
 

@@ -13,9 +13,9 @@ import psbp.external.implementation.active.writing.reading.`=>AWR`
 
 // givens
 
-import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
-
 import psbp.external.implementation.active.writing.givens.activeWritingComputation
+
+import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
 
 given activeWritingReadingReading[
   W: Writable
