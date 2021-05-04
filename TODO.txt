@@ -1,4 +1,4 @@
-readingTransformedComputation
+--> readingTransformedComputation
 
   override private[psbp] val `f~>t`: F ~> T = 
     new {
@@ -12,9 +12,28 @@ readingTransformedComputation
 
 
     
-readingTransformedMaterialization
+--> readingTransformedMaterialization
 
 // ]: Materialization[[Z, Y] =>> Z => ReadingTransformed[R, C][Y], Z, C[Y]] with
+
+
+
+--> programWithReading
+
+generalized
+
+--> stdInProgramWithReading
+
+necessary at all?
+
+if yes, cleanup
+
+
+-->
+
+materializedMainFactorial
+
+works, but why? maybe try to use real type?
 
 
 

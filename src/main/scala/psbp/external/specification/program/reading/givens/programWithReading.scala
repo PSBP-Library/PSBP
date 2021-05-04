@@ -1,21 +1,19 @@
 package psbp.external.specification.program.reading.givens
 
+import scala.language.postfixOps
+
 import psbp.external.specification.program.Program
 
-import psbp.external.specification.reading.{
-  Readable
-  , Reading
-}
+import psbp.external.specification.reading.Readable
 
 import psbp.external.specification.program.reading.ProgramWithReading
 
 given programWithReading[
   R: Readable, 
   >-->[- _, + _]: Program
-                : [>-->[- _, + _]] =>> Reading[R, >-->]
 ]: ProgramWithReading[R, >-->] with
  
-  private val program = summon[Program[>-->]]
+  private val program: Program[>-->] = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -24,6 +22,15 @@ given programWithReading[
   export program.construct
   export program.conditionally
 
-  private val reading = summon[Reading[R, >-->]]
+  override def read: Unit >--> R = 
 
-  export reading.read
+    object function {
+
+      val read: Unit => R =
+        _ =>
+          val readable = summon[Readable[R]]
+          readable.r
+
+    }
+
+    function.read asProgram 

@@ -10,7 +10,7 @@ import psbp.external.specification.reading.{
 
 import psbp.external.specification.program.reading.ProgramWithReading
 
-given productionFromConvertibleFromReading [
+given productionFromConvertibleFromReadable [
   Z: [Z] =>> ConvertibleFromReadable[R, Z, >-->]
   , R: Readable
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]

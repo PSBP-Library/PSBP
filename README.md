@@ -505,22 +505,20 @@ trait ProgramWithWriting[W: Writable, >-->[- _, + _]]
 ```scala
 package psbp.external.specification.program.reading.givens
 
+import scala.language.postfixOps
+
 import psbp.external.specification.program.Program
 
-import psbp.external.specification.reading.{
-  Readable
-  , Reading
-}
+import psbp.external.specification.reading.Readable
 
 import psbp.external.specification.program.reading.ProgramWithReading
 
 given programWithReading[
   R: Readable, 
   >-->[- _, + _]: Program
-                : [>-->[- _, + _]] =>> Reading[R, >-->]
 ]: ProgramWithReading[R, >-->] with
  
-  private val program = summon[Program[>-->]]
+  private val program: Program[>-->] = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -529,12 +527,21 @@ given programWithReading[
   export program.construct
   export program.conditionally
 
-  private val reading = summon[Reading[R, >-->]]
+  override def read: Unit >--> R = 
 
-  export reading.read
+    object function {
+
+      val read: Unit => R =
+        _ =>
+          val readable = summon[Readable[R]]
+          readable.r
+
+    }
+
+    function.read asProgram 
 ```
 
-## `productionFromConvertibleFromReading`
+## `productionFromConvertibleFromReadable`
 
 ```scala
 package psbp.external.specification.program.reading.givens
@@ -549,7 +556,7 @@ import psbp.external.specification.reading.{
 
 import psbp.external.specification.program.reading.ProgramWithReading
 
-given productionFromConvertibleFromReading [
+given productionFromConvertibleFromReadable [
   Z: [Z] =>> ConvertibleFromReadable[R, Z, >-->]
   , R: Readable
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]
@@ -585,7 +592,7 @@ given programWithWriting[
                 : [>-->[- _, + _]] =>> Writing[W, >-->]
 ]: ProgramWithWriting[W, >-->] with
  
-  private val program = summon[Program[>-->]]
+  private val program: Program[>-->] = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -594,7 +601,7 @@ given programWithWriting[
   export program.construct
   export program.conditionally
 
-  private val writing = summon[Writing[W, >-->]]
+  private val writing: Writing[W, >-->] = summon[Writing[W, >-->]]
 
   export writing.write
 ```
@@ -1573,58 +1580,16 @@ package psbp.external.implementation.stdIn
 case class StdIn[Z](`u=>z`: Unit => Z)
 ```
 
-## `stdInProgramWithReading`
+<!-- convertibleFromStdInReadable -->
+
+## `StdOut`
 
 ```scala
-package psbp.external.implementation.stdIn.givens
+package psbp.external.implementation.stdOut
 
-import scala.language.postfixOps
+package psbp.external.implementation.stdOut
 
-import psbp.external.specification.program.Program
-
-import psbp.external.specification.program.reading.ProgramWithReading
-
-import psbp.external.specification.reading.{
-  Readable
-  , Reading
-}
-
-import psbp.external.implementation.stdIn.StdIn
-
-given stdInProgramWithReading[
-  Z: [Z] =>> Readable[StdIn[Z]],
-  >-->[- _, + _]: Program
-]: ProgramWithReading[StdIn[Z], >-->] with
-
-  private val program = summon[Program[>-->]]
-
-  export program.identity
-  export program.andThen
-
-  export program.toProgram
-  export program.construct
-  export program.conditionally
-
-  private type R = StdIn[Z]
-
-  override def read: Unit >--> R = 
-
-    object function {
-
-      val read: Unit => R =
-        _ =>
-          val readable = summon[Readable[StdIn[Z]]]
-          readable.r
-
-    }
-
-    function.read asProgram 
-```
-
-## ``
-
-```scala
-
+case class StdOut(`u=>u`: Unit => Unit)
 ```
 
 ## ``
