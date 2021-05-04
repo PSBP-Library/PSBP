@@ -15,8 +15,7 @@ given programWithWriting[
                 : [>-->[- _, + _]] =>> Writing[W, >-->]
 ]: ProgramWithWriting[W, >-->] with
  
-  private val program: Program[>-->] = 
-    summon[Program[>-->]]
+  private val program = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -25,7 +24,6 @@ given programWithWriting[
   export program.construct
   export program.conditionally
 
-  private val writing: Writing[W, >-->] = 
-    summon[Writing[W, >-->]]
+  private val writing = summon[Writing[W, >-->]]
 
   export writing.write

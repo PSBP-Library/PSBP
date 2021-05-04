@@ -17,8 +17,7 @@ private[psbp] given programFromComputation[
   C[+ _]: Computation]: Program[ProgramFromComputation[C]
 ] with
   
-  private val computation: Computation[C] = 
-    summon[Computation[C]]
+  private val computation = summon[Computation[C]]
   import computation.result
 
   private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]

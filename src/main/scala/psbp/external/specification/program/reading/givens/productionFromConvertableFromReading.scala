@@ -16,12 +16,10 @@ given productionFromConvertibleFromReading [
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]
 ]: Production[>-->, Z] with
 
-  val convertibleFromReadable: ConvertibleFromReadable[R, Z, >-->] = 
-    summon[ConvertibleFromReadable[R, Z, >-->]]
+  val convertibleFromReadable = summon[ConvertibleFromReadable[R, Z, >-->]]
   import convertibleFromReadable.`r>-->z`
     
-  val reading: Reading[R, >-->] = 
-    summon[Reading[R, >-->]]
+  val reading = summon[Reading[R, >-->]]
   import reading.`u>-->r`
   
   override def produce: Unit >--> Z =

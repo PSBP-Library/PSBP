@@ -29,8 +29,7 @@ private[psbp] given readingTransformedWriting[
   private type `=>F` = [Z, Y] =>> Z => F[Y]
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val writing: Writing[W, `=>F`] = 
-    summon[Writing[W, `=>F`]]
+  private val writing = summon[Writing[W, `=>F`]]
   import writing.{
     write => writeF
   }

@@ -16,12 +16,10 @@ given consumptionFromConvertibleToWritable [
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithWriting[W, >-->]
 ]: Consumption[Y, >-->] with 
 
-  private val convertibleToWritable: ConvertibleToWritable[Y, W, >-->] = 
-    summon[ConvertibleToWritable[Y, W, >-->]]
+  private val convertibleToWritable = summon[ConvertibleToWritable[Y, W, >-->]]
   import convertibleToWritable.`y>-->w`
   
-  private val writing: Writing[W, >-->] = 
-    summon[Writing[W, >-->]]
+  private val writing = summon[Writing[W, >-->]]
   import writing.`w>-->u`
 
   override def consume: Y >--> Unit =

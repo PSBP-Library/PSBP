@@ -22,8 +22,7 @@ private[psbp] given readingTransformedReading[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
   }

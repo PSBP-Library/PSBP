@@ -21,8 +21,7 @@ private[psbp] trait ComputationTransformation[F[+ _]: Resulting, T[+ _]]
       apply => `fz=>tz` 
     }
 
-    val resulting: Resulting[F] = 
-      summon[Resulting[F]]
+    val resulting = summon[Resulting[F]]
     import resulting.{ 
       result => `z=>fz` 
     }

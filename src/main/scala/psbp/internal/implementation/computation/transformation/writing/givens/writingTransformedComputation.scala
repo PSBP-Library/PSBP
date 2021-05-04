@@ -23,14 +23,13 @@ private[psbp] given writingTransformedComputation[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF
   }
 
-  private val writable: Writable[W] = summon[Writable[W]]
+  private val writable = summon[Writable[W]]
   import writable.{
     empty
     , append

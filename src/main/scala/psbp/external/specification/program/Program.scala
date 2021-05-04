@@ -82,18 +82,15 @@ def toMain[
                   : [>-->[- _, + _]] =>> Consumption[Z && Y, >-->]
 ](`z>-->y`: Z >--> Y) =
 
-  val production: Production[>-->, Z] = 
-    summon[Production[>-->, Z]]
+  val production = summon[Production[>-->, Z]]
   import production.{
     produce => `u>-->z`
   }
 
-  val program: Program[>-->] = 
-    summon[Program[>-->]]
+  val program = summon[Program[>-->]]
   import program.Let    
 
-  val consumption: Consumption[Z && Y, >-->] = 
-    summon[Consumption[Z && Y, >-->]]
+  val consumption = summon[Consumption[Z && Y, >-->]]
   import consumption.{
     consume => `(z&&y)>-->u`
   }

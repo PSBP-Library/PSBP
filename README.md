@@ -252,18 +252,15 @@ def toMain[
                   : [>-->[- _, + _]] =>> Consumption[Z && Y, >-->]
 ](`z>-->y`: Z >--> Y) =
 
-  val production: Production[>-->, Z] = 
-    summon[Production[>-->, Z]]
+  val production = summon[Production[>-->, Z]]
   import production.{
     produce => `u>-->z`
   }
 
-  val program: Program[>-->] = 
-    summon[Program[>-->]]
+  val program = summon[Program[>-->]]
   import program.Let    
 
-  val consumption: Consumption[Z && Y, >-->] = 
-    summon[Consumption[Z && Y, >-->]]
+  val consumption = summon[Consumption[Z && Y, >-->]]
   import consumption.{
     consume => `(z&&y)>-->u`
   }
@@ -523,8 +520,7 @@ given programWithReading[
                 : [>-->[- _, + _]] =>> Reading[R, >-->]
 ]: ProgramWithReading[R, >-->] with
  
-  private val program: Program[>-->] = 
-    summon[Program[>-->]]
+  private val program = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -533,8 +529,7 @@ given programWithReading[
   export program.construct
   export program.conditionally
 
-  private val reading: Reading[R, >-->] = 
-    summon[Reading[R, >-->]]
+  private val reading = summon[Reading[R, >-->]]
 
   export reading.read
 ```
@@ -560,12 +555,10 @@ given productionFromConvertibleFromReading [
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]
 ]: Production[>-->, Z] with
 
-  val convertibleFromReadable: ConvertibleFromReadable[R, Z, >-->] = 
-    summon[ConvertibleFromReadable[R, Z, >-->]]
+  val convertibleFromReadable = summon[ConvertibleFromReadable[R, Z, >-->]]
   import convertibleFromReadable.`r>-->z`
     
-  val reading: Reading[R, >-->] = 
-    summon[Reading[R, >-->]]
+  val reading = summon[Reading[R, >-->]]
   import reading.`u>-->r`
   
   override def produce: Unit >--> Z =
@@ -592,8 +585,7 @@ given programWithWriting[
                 : [>-->[- _, + _]] =>> Writing[W, >-->]
 ]: ProgramWithWriting[W, >-->] with
  
-  private val program: Program[>-->] = 
-    summon[Program[>-->]]
+  private val program = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -602,8 +594,7 @@ given programWithWriting[
   export program.construct
   export program.conditionally
 
-  private val writing: Writing[W, >-->] = 
-    summon[Writing[W, >-->]]
+  private val writing = summon[Writing[W, >-->]]
 
   export writing.write
 ```
@@ -629,12 +620,10 @@ given consumptionFromConvertibleToWritable [
   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithWriting[W, >-->]
 ]: Consumption[Y, >-->] with 
 
-  private val convertibleToWritable: ConvertibleToWritable[Y, W, >-->] = 
-    summon[ConvertibleToWritable[Y, W, >-->]]
+  private val convertibleToWritable = summon[ConvertibleToWritable[Y, W, >-->]]
   import convertibleToWritable.`y>-->w`
   
-  private val writing: Writing[W, >-->] = 
-    summon[Writing[W, >-->]]
+  private val writing = summon[Writing[W, >-->]]
   import writing.`w>-->u`
 
   override def consume: Y >--> Unit =
@@ -721,8 +710,7 @@ private[psbp] given programFromComputation[
   C[+ _]: Computation]: Program[ProgramFromComputation[C]
 ] with
   
-  private val computation: Computation[C] = 
-    summon[Computation[C]]
+  private val computation = summon[Computation[C]]
   import computation.result
 
   private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
@@ -799,8 +787,7 @@ private[psbp] trait ComputationTransformation[F[+ _]: Resulting, T[+ _]]
       apply => `fz=>tz` 
     }
 
-    val resulting: Resulting[F] = 
-      summon[Resulting[F]]
+    val resulting = summon[Resulting[F]]
     import resulting.{ 
       result => `z=>fz` 
     }
@@ -846,8 +833,7 @@ private[psbp] given readingTransformedReading[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
   }
@@ -884,8 +870,7 @@ private[psbp] given readingTransformedComputation[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF
@@ -931,14 +916,12 @@ private[psbp] given readingTransformedMaterialization[
   private type `=>F`[-Z, +Y] = Z => F[Y]
   private type `=>T`[-Z, +Y] = Z => T[Y]
 
-  private val Materialization: Materialization[`=>F`, Z, Y] = 
-    summon[Materialization[`=>F`, Z, Y]]
-  import Materialization.{ 
+  private val materialization = summon[Materialization[`=>F`, Z, Y]]
+  import materialization.{ 
     materialize => materializeF 
   }
 
-  private val computation: Computation[C] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF 
@@ -993,8 +976,7 @@ private[psbp] given writingTransformedWriting[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
   }
@@ -1032,8 +1014,7 @@ private[psbp] given writingTransformedComputation[
 
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val computation: Computation[F] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF
@@ -1087,14 +1068,12 @@ private[psbp] given writingTransformedMaterialization[
   private type `=>F`[-Z, +Y] = Z => F[Y]
   private type `=>T`[-Z, +Y] = Z => T[Y]
 
-  private val Materialization: Materialization[`=>F`, Z, Y] = 
-    summon[Materialization[`=>F`, Z, Y]]
+  private val Materialization: Materialization[`=>F`, Z, Y] = summon[Materialization[`=>F`, Z, Y]]
   import Materialization.{ 
     materialize => materializeF 
   }
 
-  private val computation: Computation[C] = 
-    summon[Computation[F]]
+  private val computation: summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF 
@@ -1143,8 +1122,7 @@ private[psbp] given readingTransformedWriting[
   private type `=>F` = [Z, Y] =>> Z => F[Y]
   private type `=>T` = [Z, Y] =>> Z => T[Y]
 
-  private val writing: Writing[W, `=>F`] = 
-    summon[Writing[W, `=>F`]]
+  private val writing = summon[Writing[W, `=>F`]]
   import writing.{
     write => writeF
   }
@@ -1587,16 +1565,60 @@ given activeWritingReadingMaterialization[
 ] = readingTransformedMaterialization[R, ActiveWriting[W], Unit, (W, Unit)]
 ```
 
-## ``
+## `StdIn`
 
 ```scala
+package psbp.external.implementation.stdIn
 
+case class StdIn[Z](`u=>z`: Unit => Z)
 ```
 
-## ``
+## `stdInProgramWithReading`
 
 ```scala
+package psbp.external.implementation.stdIn.givens
 
+import scala.language.postfixOps
+
+import psbp.external.specification.program.Program
+
+import psbp.external.specification.program.reading.ProgramWithReading
+
+import psbp.external.specification.reading.{
+  Readable
+  , Reading
+}
+
+import psbp.external.implementation.stdIn.StdIn
+
+given stdInProgramWithReading[
+  Z: [Z] =>> Readable[StdIn[Z]],
+  >-->[- _, + _]: Program
+]: ProgramWithReading[StdIn[Z], >-->] with
+
+  private val program = summon[Program[>-->]]
+
+  export program.identity
+  export program.andThen
+
+  export program.toProgram
+  export program.construct
+  export program.conditionally
+
+  private type R = StdIn[Z]
+
+  override def read: Unit >--> R = 
+
+    object function {
+
+      val read: Unit => R =
+        _ =>
+          val readable = summon[Readable[StdIn[Z]]]
+          readable.r
+
+    }
+
+    function.read asProgram 
 ```
 
 ## ``

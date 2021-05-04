@@ -15,8 +15,7 @@ given programWithReading[
                 : [>-->[- _, + _]] =>> Reading[R, >-->]
 ]: ProgramWithReading[R, >-->] with
  
-  private val program: Program[>-->] = 
-    summon[Program[>-->]]
+  private val program = summon[Program[>-->]]
 
   export program.identity
   export program.andThen
@@ -25,7 +24,6 @@ given programWithReading[
   export program.construct
   export program.conditionally
 
-  private val reading: Reading[R, >-->] = 
-    summon[Reading[R, >-->]]
+  private val reading = summon[Reading[R, >-->]]
 
   export reading.read

@@ -21,14 +21,12 @@ private[psbp] given writingTransformedMaterialization[
   private type `=>F`[-Z, +Y] = Z => F[Y]
   private type `=>T`[-Z, +Y] = Z => T[Y]
 
-  private val Materialization: Materialization[`=>F`, Z, Y] = 
-    summon[Materialization[`=>F`, Z, Y]]
+  private val Materialization = summon[Materialization[`=>F`, Z, Y]]
   import Materialization.{ 
     materialize => materializeF 
   }
 
-  private val computation: Computation[C] = 
-    summon[Computation[F]]
+  private val computation = summon[Computation[F]]
   import computation.{ 
     result => resultF
     , bind => bindF 
