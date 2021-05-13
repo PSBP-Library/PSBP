@@ -18,15 +18,10 @@ given convertibleToStdOutWritable[
   , >-->[- _, + _]: Program
 ](using programName: String): ConvertibleToWritable[(Z && Y), StdOut, >-->] with
 
-  type W = StdOut
-
-  override def convert: (Z && Y) >--> W =
-    `(z&&y)>-->w`
-
-  private def `(z&&y)>-->w`: (Z && Y) >--> W =  
+  override def convert: (Z && Y) >--> StdOut =
     object function {
 
-      val `(z&&y)=>w`: (Z && Y) => W =
+      val convert: (Z && Y) => StdOut =
         (z, y) =>
           StdOut{ _ =>
             println(s"applying $programName to argument $z yields result $y")
@@ -34,7 +29,7 @@ given convertibleToStdOutWritable[
 
     }
 
-    function.`(z&&y)=>w` asProgram
+    function.convert asProgram
 
 /*
 

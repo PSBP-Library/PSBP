@@ -1,4 +1,4 @@
-package examples.implementation.stdOut.writing.stdIn.reading.givens
+package examples.implementation.stdOut.writing.stdIn.reading
 
 import psbp.external.specification.program.Program
 
@@ -12,19 +12,19 @@ import examples.specification.program.factorial
 
 import psbp.external.specification.program.reading.givens.productionFromConvertibleFromReadable
 
-import psbp.external.specification.program.writing.givens.consumptionFromConvertibleToWritable
-
-import psbp.external.specification.program.reading.givens.programWithReading
-
 import psbp.external.implementation.stdIn.givens.convertibleFromStdInReadable
-
-import psbp.external.implementation.stdOut.givens.stdOutProgramWithWriting
-
-import psbp.external.implementation.stdOut.givens.stdOutWritable
 
 import examples.implementation.stdIn.reading.givens.stdInBigIntReadable
 
+import psbp.external.specification.program.reading.givens.reading
+
+import psbp.external.specification.program.writing.givens.consumptionFromConvertibleToWritable
+
 import examples.implementation.stdOut.writing.givens.factorialConvertibleToStdOutWritable
+
+import psbp.external.implementation.stdOut.givens.stdOutWritable
+
+import psbp.external.implementation.stdOut.givens.stdOutWriting
 
 def materializedMainFactorial[
   Z, Y
@@ -37,3 +37,5 @@ def materializedMainFactorial[
   import materialization.materialize
 
   materialize(toMain(factorial))
+
+

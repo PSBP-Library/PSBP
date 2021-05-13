@@ -2,6 +2,8 @@ package psbp.external.specification.program.reading.givens
 
 import psbp.external.specification.production.Production
 
+import psbp.external.specification.program.Program
+
 import psbp.external.specification.reading.{
   Readable
   , ConvertibleFromReadable
@@ -13,7 +15,9 @@ import psbp.external.specification.program.reading.ProgramWithReading
 given productionFromConvertibleFromReadable [
   Z: [Z] =>> ConvertibleFromReadable[R, Z, >-->]
   , R: Readable
-  , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]
+     : [R] =>> Reading[R, >-->]
+  , >-->[- _, + _]: Program  
+  // , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithReading[R, >-->]
 ]: Production[>-->, Z] with
 
   val convertibleFromReadable = summon[ConvertibleFromReadable[R, Z, >-->]]
