@@ -2,77 +2,37 @@ package examples.implementation.active.program.stdOut.writing.stdIn.reading
 
 import examples.implementation.stdOut.writing.stdIn.reading.materializedMainFactorial
 
-// imported givens
-
-import examples.implementation.stdIn.reading.givens.stdInBigIntReadable
+// givens
 
 import psbp.external.implementation.stdOut.givens.stdOutWritable
 
+// no effect needed
+
 import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingProgram
 
-import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingMaterialization
-  
-import examples.implementation.int.givens.pleaseTypeAnInteger
+import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingReading
 
-import examples.implementation.stdIn.givens.stdInBigInt
+import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingWriting
+
+import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingMaterialization
 
 @main def factorial(args: String*): Unit =
-  materializedMainFactorial
 
-/*
+  import examples.implementation.unit.givens.pleaseTypeAnInteger
 
-import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingMaterialization
+  import examples.implementation.bigInt.givens.bigInt
 
+  // materializedMainFactorial
 
-import examples.implementation.givens.unit
+  val (stdOut, (_, _)) = materializedMainFactorial
 
-import examples.implementation.stdIn.reading.givens.stdInBigInt
+  val effect = stdOut.`u=>u`
+  
+  effect(())
 
-val materializedMainFactorial = // : (StdOut, (StdOut, Unit)) = 
-  activeWritingReadingMaterialization.materialize(toMain(factorial))
+  // val (_, (stdOut, _)) = materializedMainFactorial
 
-*/
+  // val effect = stdOut.`u=>u`
+  
+  // effect(())  
 
-  // givens
-
-  // import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingProgram
-
-  // import psbp.external.implementation.stdOut.StdOut
-
-  // import psbp.external.implementation.stdIn.StdIn
-
-  // import psbp.external.implementation.active.writing.reading.`=>AWR`
-
-  // import examples.implementation.stdIn.reading.givens.stdInBigInt
-
-  // import examples.implementation.stdIn.reading.givens.stdInBigIntReadable
-
-  // import psbp.external.implementation.stdOut.givens.stdOutWritable
-
-  // import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingMaterialization
-  // import examples.implementation.givens.unit
-
-  // val foo = // (StdOut(effect1), (StdOut(effect2), ())): (StdOut, (StdOut, Unit)) = 
-  //   materializedMainFactorial // [Unit, StdIn[BigInt] ?=> (StdOut, (StdOut, Unit)),`=>AWR`[StdOut, StdIn[BigInt]]]
-
-
-// UNTIL HERE
-
-
-  // val effect: Unit => Unit = effect2
-
-  // // println(effect2)  
-
-  // effect(())
-
-  // // givens
-
-  // import psbp.external.implementation.active.givens.activeProgram
-
-  // import psbp.external.implementation.active.givens.activeMaterialization
-
-  // import examples.implementation.stdOut.writing.stdIn.reading.materializedMainFactorial
-
-  // import examples.implementation.givens.unit    
-
-  // val foo: Unit = materializedMainFactorial

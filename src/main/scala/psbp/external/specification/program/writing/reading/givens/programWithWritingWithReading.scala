@@ -2,37 +2,34 @@
 
 // import psbp.external.specification.program.Program
 
-// import psbp.external.specification.reading.{
-//   Readable
-//   , Reading
-// }
+// import psbp.external.specification.writing.Writable
 
-// import psbp.external.specification.writing.{
-//   Writable
-//   // , Writing
-// }
+// import psbp.external.specification.writing.Writing
 
-// import psbp.external.specification.program.writing.ProgramWithWriting
+// import psbp.external.specification.reading.Reading
 
 // import psbp.external.specification.program.writing.reading.ProgramWithWritingWithReading
 
 // given programWithWritingWithReading[
 //   W: Writable
-//   , R: Readable
-//   , >-->[- _, + _]: [>-->[- _, + _]] =>> ProgramWithWriting[W, >-->]
+//   , R
+//   , >-->[- _, + _]: Program
+//                   : [>-->[- _, + _]] =>> Writing[W, >-->]
 //                   : [>-->[- _, + _]] =>> Reading[R, >-->]
 // ]: ProgramWithWritingWithReading[W, R, >-->] with
  
-//   private val programWithWriting: ProgramWithWriting[W, >-->] = summon[ProgramWithWriting[W, >-->]]
+//   private val program: Program[>-->] = summon[Program[>-->]]
 
-//   export programWithWriting.identity
-//   export programWithWriting.andThen
+//   export program.identity
+//   export program.andThen
 
-//   export programWithWriting.toProgram
-//   export programWithWriting.construct
-//   export programWithWriting.conditionally
+//   export program.toProgram
+//   export program.construct
+//   export program.conditionally
 
-//   export programWithWriting.write
+//   private val writing: Writing[W, >-->] = summon[Writing[W, >-->]]
+
+//   export writing.write
 
 //   private val reading: Reading[R, >-->] = summon[Reading[R, >-->]]
 

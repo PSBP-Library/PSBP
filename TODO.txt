@@ -1,16 +1,4 @@
---> readingTransformedComputation
-
-  override private[psbp] val `f~>t`: F ~> T = 
-    new {
-      def apply[Z]: F[Z] => T[Z] =
-        fz =>
-          // todo: simplify 
-          // fz
-          bindF(fz, z => resultF(z))
-    }  
-
-
-seems to be ok
+--> getting rid of (W, (W, Unit))
     
 --> readingTransformedMaterialization
 

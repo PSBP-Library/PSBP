@@ -1,7 +1,5 @@
 package psbp.external.implementation.active.writing.reading.givens
 
-import psbp.external.specification.reading.Readable
-
 import psbp.external.specification.writing.Writable
 
 import psbp.external.specification.materialization.Materialization
@@ -23,7 +21,7 @@ import psbp.internal.implementation.computation.transformation.reading.givens.re
 
 given activeWritingReadingMaterialization[
   W: Writable
-  , R: Readable
+  , R
 ]: Materialization[
   `=>AWR`[W, R]
   , Unit

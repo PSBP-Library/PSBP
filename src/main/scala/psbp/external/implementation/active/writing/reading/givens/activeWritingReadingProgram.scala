@@ -2,8 +2,6 @@ package psbp.external.implementation.active.writing.reading.givens
 
 import psbp.external.specification.program.Program
 
-import psbp.external.specification.reading.Readable
-
 import psbp.external.specification.writing.Writable
 
 import psbp.external.implementation.active.writing.ActiveWriting
@@ -25,12 +23,12 @@ import psbp.internal.implementation.computation.transformation.reading.givens.re
 
 private[psbp] given activeWritingReadingComputation[
   W: Writable
-  , R: Readable
+  , R
 ]: Computation[ActiveWritingReading[W, R]] = 
   readingTransformedComputation[R, ActiveWriting[W]]
 
 given activeWritingReadingProgram[
   W: Writable
-  , R: Readable
+  , R
 ]: Program[`=>AWR`[W, R]] = 
   programFromComputation[ActiveWritingReading[W, R]]

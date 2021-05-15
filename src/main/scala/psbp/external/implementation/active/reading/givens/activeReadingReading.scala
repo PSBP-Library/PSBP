@@ -1,9 +1,6 @@
 // package psbp.external.implementation.active.reading.givens
 
-// import psbp.external.specification.reading.{
-//   Readable
-//   , Reading
-// }
+// import psbp.external.specification.reading.Reading
 
 // import psbp.external.implementation.active.Active
 
@@ -15,5 +12,5 @@
 
 // import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedReading
 
-// given activeReadingReading[R: Readable]: Reading[R, `=>AR`[R]] = 
+// given activeReadingReading[R]: Reading[R, `=>AR`[R]] = 
 //   readingTransformedReading[R, Active]

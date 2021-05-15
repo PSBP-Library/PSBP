@@ -1,26 +1,25 @@
 package psbp.internal.implementation.computation.transformation.reading.givens
 
-import psbp.external.specification.reading.{
-  Readable
-  , Reading
-}
+import psbp.external.specification.reading.Reading
 
 import psbp.internal.specification.computation.Computation
+
+import psbp.external.implementation.computation.ProgramFromComputation
 
 import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
 
 private[psbp] given readingTransformedReading[
-  R: Readable
+  R
   , C[+ _]: Computation
 ]: Reading[
   R
-  , [Z, Y] =>> Z => ReadingTransformed[R, C][Y]
+  , ProgramFromComputation[ReadingTransformed[R, C]]
 ] with
 
   private type F[+Y] = C[Y]
   private type T[+Y] = ReadingTransformed[R, C][Y]
 
-  private type `=>T` = [Z, Y] =>> Z => T[Y]
+  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
 
   private val computation = summon[Computation[F]]
   import computation.{ 
@@ -29,5 +28,4 @@ private[psbp] given readingTransformedReading[
 
   override def read: Unit `=>T` R =
     _ =>
-      val r: R = summon[R]
-      resultF(r)
+      resultF(summon[R])

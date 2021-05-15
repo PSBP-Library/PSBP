@@ -12,7 +12,5 @@ trait Function[>-->[- _, + _]]:
     def asProgram: Z >--> Y =
       toProgram(`z=>y`)
 
-  // utilities
-
   
 

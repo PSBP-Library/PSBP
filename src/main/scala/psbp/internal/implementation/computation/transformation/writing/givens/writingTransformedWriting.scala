@@ -7,6 +7,8 @@ import psbp.external.specification.writing.{
 
 import psbp.internal.specification.computation.Computation
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
 
 private[psbp] given writingTransformedWriting[
@@ -14,13 +16,13 @@ private[psbp] given writingTransformedWriting[
   , C[+ _]: Computation
 ]: Writing[
   W
-  , [Z, Y] =>> Z => WritingTransformed[W, C][Y]
+  , ProgramFromComputation[WritingTransformed[W, C]]
 ] with
 
   private type F[+Y] = C[Y]
   private type T[+Y] = WritingTransformed[W, C][Y]
 
-  private type `=>T` = [Z, Y] =>> Z => T[Y]
+  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
 
   private val computation = summon[Computation[F]]
   import computation.{ 

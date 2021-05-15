@@ -1,17 +1,17 @@
 package psbp.internal.implementation.computation.transformation.reading.givens
 
-import psbp.external.specification.reading.Readable
-
 import psbp.internal.specification.computation.Computation
 
 import psbp.internal.specification.naturalTransformation.~>
 
 import psbp.internal.specification.computation.transformation.ComputationTransformation
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
 
 private[psbp] given readingTransformedComputation[
-  R: Readable
+  R
   , C[+ _]: Computation
 ]: ComputationTransformation[C, ReadingTransformed[R, C]] 
   with Computation[ReadingTransformed[R, C]] with
@@ -19,12 +19,11 @@ private[psbp] given readingTransformedComputation[
   private type F[+Y] = C[Y]
   private type T[+Y] = ReadingTransformed[R, C][Y]
 
-  private type `=>T` = [Z, Y] =>> Z => T[Y]
+  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
 
   private val computation = summon[Computation[F]]
   import computation.{ 
-    result => resultF
-    , bind => bindF
+    bind => bindF
   }
 
   override private[psbp] val `f~>t`: F ~> T = 
@@ -32,7 +31,6 @@ private[psbp] given readingTransformedComputation[
       def apply[Z]: F[Z] => T[Z] =
         fz => 
           fz
-          // bindF(fz, z => resultF(z))
     }  
 
   override private[psbp] def bind[Z, Y](

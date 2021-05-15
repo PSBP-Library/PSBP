@@ -10,30 +10,34 @@ import examples.specification.program.factorial
 
 // givens
 
-import psbp.external.specification.program.reading.givens.productionFromConvertibleFromReadable
-
-import psbp.external.implementation.stdIn.givens.convertibleFromStdInReadable
-
-import examples.implementation.stdIn.reading.givens.stdInBigIntReadable
-
-import psbp.external.specification.program.reading.givens.reading
+import psbp.external.specification.program.reading.givens.productionFromReading
 
 import psbp.external.specification.program.writing.givens.consumptionFromConvertibleToWritable
 
-import examples.implementation.stdOut.writing.givens.factorialConvertibleToStdOutWritable
+import psbp.external.implementation.stdOut.StdOut
 
 import psbp.external.implementation.stdOut.givens.stdOutWritable
 
 import psbp.external.implementation.stdOut.givens.stdOutWriting
 
-def materializedMainFactorial[
-  Z, Y
-  , >-->[- _, + _]: Program 
-                  : [>-->[- _, + _]] =>> Materialization[>-->, Z, Y]
-]: Z ?=> Y =
-  
-  val materialization: Materialization[>-->, Z, Y] = 
-    summon[Materialization[>-->, Z, Y]]
-  import materialization.materialize
+import examples.implementation.stdIn.reading.givens.stdInBigIntReading
 
-  materialize(toMain(factorial))
+import examples.implementation.stdOut.writing.givens.factorialConvertibleToStdOutWritable
+
+import psbp.external.specification.reading.Reading
+
+import psbp.external.specification.writing.Writing
+
+import psbp.external.specification.materialization.Materialization
+
+def materializedMainFactorial[
+  >-->[- _, + _]: Program
+                : [>-->[- _, + _]] =>> Reading[BigInt, >-->]
+                : [>-->[- _, + _]] =>> Writing[StdOut, >-->]
+                : [>-->[- _, + _]] =>> Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))]
+]: Unit ?=> (BigInt ?=> (StdOut, (StdOut, Unit))) =
+
+  val materialization: Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))] =
+    summon[Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))]]
+
+  materialization.materialize(toMain(factorial))

@@ -1,6 +1,6 @@
 package psbp.external.specification.reading
 
-trait Reading[R: Readable, >-->[- _, + _]]:
+trait Reading[R, >-->[- _, + _]]:
 
   // declared
 

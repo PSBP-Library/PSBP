@@ -2,11 +2,8 @@ package psbp.external.specification.program.reading
 
 import psbp.external.specification.program.Program
 
-import psbp.external.specification.reading.{
-  Readable
-  , Reading
-}
+import psbp.external.specification.reading.Reading
 
-trait ProgramWithReading[R: Readable, >-->[- _, + _]] 
+trait ProgramWithReading[R, >-->[- _, + _]] 
   extends Program[>-->] 
   , Reading[R, >-->]

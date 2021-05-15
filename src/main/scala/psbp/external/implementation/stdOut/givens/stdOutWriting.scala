@@ -16,9 +16,7 @@ given stdOutWriting[>-->[- _, + _]: Program]: Writing[StdOut, >-->] with
 
       val write: StdOut => Unit =
         case StdOut(effect) =>
-          // println("WRITE")
           effect(())
-
     }
 
     function.write asProgram  

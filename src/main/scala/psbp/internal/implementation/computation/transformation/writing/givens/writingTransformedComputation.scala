@@ -10,18 +10,20 @@ import psbp.internal.specification.naturalTransformation.~>
 
 import psbp.internal.specification.computation.transformation.ComputationTransformation
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
 
 private[psbp] given writingTransformedComputation[
   W : Writable
   , C[+ _]: Computation
 ]: ComputationTransformation[C,  WritingTransformed[W, C]] 
-  with Computation[[Y] =>> WritingTransformed[W, C][Y]] with 
+  with Computation[WritingTransformed[W, C]] with 
 
   private type F[+Y] = C[Y]
   private type T[+Y] = WritingTransformed[W, C][Y]
 
-  private type `=>T` = [Z, Y] =>> Z => T[Y]
+  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
 
   private val computation = summon[Computation[F]]
   import computation.{ 

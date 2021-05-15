@@ -13,9 +13,7 @@ import psbp.internal.specification.computation.Computation
 
 import psbp.external.implementation.computation.ProgramFromComputation
 
-private[psbp] given programFromComputation[
-  C[+ _]: Computation]: Program[ProgramFromComputation[C]
-] with
+private[psbp] given programFromComputation[C[+ _]: Computation]: Program[ProgramFromComputation[C]] with
   
   private val computation = summon[Computation[C]]
   import computation.result

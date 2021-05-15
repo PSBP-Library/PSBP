@@ -1,7 +1,5 @@
 // package psbp.external.implementation.active.reading.givens
 
-// import psbp.external.specification.reading.Readable
-
 // import psbp.external.specification.materialization.Materialization
 
 // import psbp.external.implementation.active.Active
@@ -16,5 +14,5 @@
 
 // import psbp.internal.implementation.computation.transformation.reading.givens.readingTransformedMaterialization
 
-// given activeReadingMaterialization[R: Readable]: Materialization[`=>AR`[R], Unit, R ?=> Unit] =
+// given activeReadingMaterialization[R]: Materialization[`=>AR`[R], Unit, R ?=> Unit] =
 //   readingTransformedMaterialization[R, Active, Unit, Unit]
