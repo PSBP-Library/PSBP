@@ -49,6 +49,3 @@ private[psbp] given writingTransformedComputation[
       val (w2, y): W && Y = `z=>ty`(z)
       resultF(append(w1, w2), y)
     )
-
-// private[psbp] given writingTransformedComputation[W: Writable, C[+ _]: Computation]: Computation[WritingTransformed[W, C]] = 
-//   writingTransformedTransformationWithBinding[W, C]

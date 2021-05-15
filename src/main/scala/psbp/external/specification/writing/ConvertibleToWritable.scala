@@ -1,6 +1,10 @@
 package psbp.external.specification.writing
 
-trait ConvertibleToWritable[-Y, W: Writable, >-->[- _, + _]]:
+trait ConvertibleToWritable[
+  -Y
+  , W: Writable, 
+  >-->[- _, + _]
+]:
 
   // declared
 

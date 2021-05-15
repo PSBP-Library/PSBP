@@ -37,5 +37,3 @@ def materializedMainFactorial[
   import materialization.materialize
 
   materialize(toMain(factorial))
-
-

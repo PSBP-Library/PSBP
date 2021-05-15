@@ -30,8 +30,9 @@ private[psbp] given readingTransformedComputation[
   override private[psbp] val `f~>t`: F ~> T = 
     new {
       def apply[Z]: F[Z] => T[Z] =
-        fz =>
-          bindF(fz, z => resultF(z))
+        fz => 
+          fz
+          // bindF(fz, z => resultF(z))
     }  
 
   override private[psbp] def bind[Z, Y](
@@ -39,9 +40,3 @@ private[psbp] given readingTransformedComputation[
     , `z>=ty`: => Z => T[Y]
   ): T[Y] =
     bindF(tz, z => `z>=ty`(z) )
-       
-// private[psbp] given readingTransformedComputation[
-//   R: Readable
-//   , C[+ _]: Computation
-// ]: Computation[ReadingTransformed[R, C]] = 
-//   readingTransformedTransformationWithBinding[R, C]

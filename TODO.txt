@@ -10,7 +10,7 @@
     }  
 
 
-
+seems to be ok
     
 --> readingTransformedMaterialization
 

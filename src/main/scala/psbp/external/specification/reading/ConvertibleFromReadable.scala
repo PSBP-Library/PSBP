@@ -1,6 +1,10 @@
 package psbp.external.specification.reading
 
-trait ConvertibleFromReadable[R: Readable, +Z, >-->[- _, + _]]:
+trait ConvertibleFromReadable[
+  R: Readable
+  , +Z
+  , >-->[- _, + _]
+]:
 
   // declared
 

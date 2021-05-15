@@ -1,3 +1,3 @@
-package examples.implementation.givens
+package examples.implementation.givens 
 
 given unit: Unit = ()
