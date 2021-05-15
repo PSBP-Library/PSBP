@@ -1,35 +1,35 @@
-package psbp.external.implementation.stdOut.givens
+// package psbp.external.implementation.stdOut.givens
 
-import scala.language.postfixOps
+// import scala.language.postfixOps
 
-import psbp.external.specification.program.Program
+// import psbp.external.specification.program.Program
 
-import psbp.external.specification.program.writing.ProgramWithWriting
+// import psbp.external.specification.program.writing.ProgramWithWriting
 
-import psbp.external.implementation.stdOut.StdOut
+// import psbp.external.implementation.stdOut.StdOut
 
-given stdOutProgramWithWriting[>-->[- _, + _]: Program]: ProgramWithWriting[StdOut, >-->] with
+// given stdOutProgramWithWriting[>-->[- _, + _]: Program]: ProgramWithWriting[StdOut, >-->] with
 
-  private val program: Program[>-->] = summon[Program[>-->]]
+//   private val program: Program[>-->] = summon[Program[>-->]]
 
-  export program.identity
-  export program.andThen
+//   export program.identity
+//   export program.andThen
 
-  export program.toProgram
-  export program.construct
-  export program.conditionally
+//   export program.toProgram
+//   export program.construct
+//   export program.conditionally
 
-  override def write: StdOut >--> Unit =
+//   override def write: StdOut >--> Unit =
 
-    object function {
+//     object function {
 
-      val write: StdOut => Unit =
-        case StdOut(effect) =>
-          effect(())
+//       val write: StdOut => Unit =
+//         case StdOut(effect) =>
+//           effect(())
 
-    }
+//     }
 
-    function.write asProgram  
+//     function.write asProgram  
 
 // import psbp.external.specification.writing.Writing
 
