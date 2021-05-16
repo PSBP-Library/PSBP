@@ -5,9 +5,9 @@ import psbp.external.specification.writing.{
   , Writing
 }
 
-import psbp.internal.specification.computation.Computation
-
 import psbp.external.implementation.computation.ProgramFromComputation
+
+import psbp.internal.specification.computation.Computation
 
 import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
 

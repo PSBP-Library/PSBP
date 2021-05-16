@@ -10,11 +10,9 @@ given stdOutWritable: Writable[StdOut] with
 
   // defined
 
-  def empty: StdOut = 
-    println("EMPTY")
-    StdOut(`u=>u` = identity )
+  override def nothing: StdOut = 
+    StdOut(effect = identity )
 
-  def append: (StdOut && StdOut) => StdOut =
+  override def append: (StdOut && StdOut) => StdOut =
     case (StdOut(firstEffect), StdOut(secondEffect)) =>
-      println("APPEND")
-      StdOut(firstEffect andThen secondEffect)
+      StdOut(effect = firstEffect andThen secondEffect)

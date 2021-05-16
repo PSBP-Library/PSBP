@@ -1,26 +1,26 @@
-package psbp.external.specification.program.reading.givens
+// package psbp.external.specification.program.reading.givens
 
-import psbp.external.specification.program.Program
+// import psbp.external.specification.program.Program
 
-import psbp.external.specification.reading.Reading
+// import psbp.external.specification.reading.Reading
 
-import psbp.external.specification.program.reading.ProgramWithReading
+// import psbp.external.specification.program.reading.ProgramWithReading
 
-given programWithReading[
-  R
-  , >-->[- _, + _]: Program
-                  : [>-->[- _, + _]] =>> Reading[R, >-->]
-]: ProgramWithReading[R, >-->] with
+// given programWithReading[
+//   R
+//   , >-->[- _, + _]: Program
+//                   : [>-->[- _, + _]] =>> Reading[R, >-->]
+// ]: ProgramWithReading[R, >-->] with
  
-  private val program: Program[>-->] = summon[Program[>-->]]
+//   private val program: Program[>-->] = summon[Program[>-->]]
 
-  export program.identity
-  export program.andThen
+//   export program.identity
+//   export program.andThen
 
-  export program.toProgram
-  export program.construct
-  export program.conditionally
+//   export program.toProgram
+//   export program.construct
+//   export program.conditionally
 
-  private val reading: Reading[R, >-->] = summon[Reading[R, >-->]]
+//   private val reading: Reading[R, >-->] = summon[Reading[R, >-->]]
 
-  export reading.read
+//   export reading.read

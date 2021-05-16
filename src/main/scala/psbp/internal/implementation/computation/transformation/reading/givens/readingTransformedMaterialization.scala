@@ -2,18 +2,26 @@ package psbp.internal.implementation.computation.transformation.reading.givens
 
 import psbp.external.specification.materialization.Materialization
 
-import psbp.internal.specification.computation.Computation
-
 import psbp.external.implementation.computation.ProgramFromComputation
+
+import psbp.internal.specification.computation.Computation
 
 import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
 
 private[psbp] given readingTransformedMaterialization[
   R
   , C[+ _]: Computation
-          : [C[+ _]] =>> Materialization[ProgramFromComputation[C], Z, Y]
+          : [C[+ _]] =>> Materialization[
+            ProgramFromComputation[C]
+            , Z
+            , Y
+            ]
   , Z, Y
-]: Materialization[ProgramFromComputation[ReadingTransformed[R, C]], Z, R ?=> C[Y]] with
+]: Materialization[
+  ProgramFromComputation[ReadingTransformed[R, C]]
+  , Z, 
+  R ?=> C[Y]
+] with
 
   private type F[+Z] = C[Z]
   private type T[+Z] = ReadingTransformed[R, C][Z]

@@ -1,12 +1,10 @@
 package examples.implementation.active.program.stdOut.writing.stdIn.reading
 
-import examples.implementation.stdOut.writing.stdIn.reading.materializedMainFactorial
+import examples.implementation.stdOut.writing.bigInt.reading.materializedMainFactorial
 
 // givens
 
 import psbp.external.implementation.stdOut.givens.stdOutWritable
-
-// no effect needed
 
 import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingProgram
 
@@ -16,23 +14,21 @@ import psbp.external.implementation.active.writing.reading.givens.activeWritingR
 
 import psbp.external.implementation.active.writing.reading.givens.activeWritingReadingMaterialization
 
-@main def factorial(args: String*): Unit =
+import psbp.external.implementation.stdOut.StdOut
+
+def writeTo02(stdOut: => StdOut) =
+  import psbp.external.implementation.stdOut.givens.stdOutWriting
+  stdOut
+
+@main def mainFactorial02(args: String*): Unit =
 
   import examples.implementation.unit.givens.pleaseTypeAnInteger
 
-  import examples.implementation.bigInt.givens.bigInt
+  import examples.implementation.stdIn.reading.givens.stdInBigIntArgument
 
-  // materializedMainFactorial
-
-  val (stdOut, (_, _)) = materializedMainFactorial
-
-  val effect = stdOut.`u=>u`
+  lazy val (stdOut, _) = materializedMainFactorial
   
-  effect(())
-
-  // val (_, (stdOut, _)) = materializedMainFactorial
-
-  // val effect = stdOut.`u=>u`
+  writeTo02(stdOut)
   
-  // effect(())  
+
 

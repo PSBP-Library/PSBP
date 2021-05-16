@@ -1,12 +1,12 @@
 package psbp.internal.implementation.computation.transformation.reading.givens
 
+import psbp.external.implementation.computation.ProgramFromComputation
+
 import psbp.internal.specification.computation.Computation
 
 import psbp.internal.specification.naturalTransformation.~>
 
 import psbp.internal.specification.computation.transformation.ComputationTransformation
-
-import psbp.external.implementation.computation.ProgramFromComputation
 
 import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
 
@@ -35,6 +35,6 @@ private[psbp] given readingTransformedComputation[
 
   override private[psbp] def bind[Z, Y](
     tz: T[Z]
-    , `z>=ty`: => Z => T[Y]
+    , `z=>ty`: => Z => T[Y]
   ): T[Y] =
-    bindF(tz, z => `z>=ty`(z) )
+    bindF(tz, z => `z=>ty`(z))

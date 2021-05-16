@@ -12,11 +12,12 @@ import psbp.external.specification.writing.{
 
 import psbp.external.implementation.stdOut.StdOut
 
-given convertibleToStdOutWritable[
+given argumentAndResultConvertibleToStdOutWritable[
   Z
   , Y
   , >-->[- _, + _]: Program
-](using programName: String): ConvertibleToWritable[(Z && Y), StdOut, >-->] with
+](using message: (Z && Y) => String)
+  : ConvertibleToWritable[(Z && Y), StdOut, >-->] with
 
   override def convert: (Z && Y) >--> StdOut =
     object function {
@@ -24,7 +25,7 @@ given convertibleToStdOutWritable[
       val convert: (Z && Y) => StdOut =
         (z, y) =>
           StdOut{ _ =>
-            println(s"applying $programName to argument $z yields result $y")
+            println(message(z, y))
           }
 
     }

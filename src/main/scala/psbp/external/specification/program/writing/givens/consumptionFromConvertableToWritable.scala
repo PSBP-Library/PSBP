@@ -10,7 +10,7 @@ import psbp.external.specification.writing.{
   , Writing
 }
 
-given consumptionFromConvertibleToWritable [
+given consumptionFromConvertibleToWritable[
   Y: [Y] =>> ConvertibleToWritable[Y, W, >-->]
   , W: Writable
      : [W] =>> Writing[W, >-->]

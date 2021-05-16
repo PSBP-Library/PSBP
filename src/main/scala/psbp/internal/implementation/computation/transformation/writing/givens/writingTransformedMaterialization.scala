@@ -4,18 +4,26 @@ import psbp.external.specification.writing.Writable
 
 import psbp.external.specification.materialization.Materialization
 
-import psbp.internal.specification.computation.Computation
-
 import psbp.external.implementation.computation.ProgramFromComputation
+
+import psbp.internal.specification.computation.Computation
 
 import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
 
 private[psbp] given writingTransformedMaterialization[
   W: Writable
   , C[+ _]: Computation
-          : [C[+ _]] =>> Materialization[ProgramFromComputation[C], Z, Y]
+          : [C[+ _]] =>> Materialization[
+            ProgramFromComputation[C]
+            , Z
+            , Y
+            ]
   , Z, Y
-]: Materialization[ProgramFromComputation[WritingTransformed[W, C]], Z, C[(W, Y)]] with
+]: Materialization[
+  ProgramFromComputation[WritingTransformed[W, C]]
+  , Z
+  , C[(W, Y)]
+] with
 
   private type F[+Z] = C[Z]
   private type T[+Z] = WritingTransformed[W, C][Z]

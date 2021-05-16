@@ -6,10 +6,7 @@ import psbp.external.specification.materialization.Materialization
 
 import psbp.external.implementation.active.writing.ActiveWriting
 
-import psbp.external.implementation.active.writing.reading.{
-  ActiveWritingReading
-  , `=>AWR`
-}
+import psbp.external.implementation.active.writing.reading.`=>AWR`
 
 // givens
 

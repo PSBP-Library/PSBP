@@ -1,6 +1,6 @@
 package psbp.internal.specification.naturalTransformation
 
-private[psbp] trait ~>[F[+ _], T[+ _]]:
+private[psbp] trait ~>[-F[+ _], +T[+ _]]:
 
   // declared
 

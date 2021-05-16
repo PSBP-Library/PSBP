@@ -6,7 +6,7 @@ trait Writable[W]:
 
   // declared
 
-  def empty: W
+  def nothing: W
 
   def append: (W && W) => W
   

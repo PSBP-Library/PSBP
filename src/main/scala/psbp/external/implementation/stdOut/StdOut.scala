@@ -1,3 +1,3 @@
 package psbp.external.implementation.stdOut
 
-case class StdOut(`u=>u`: Unit => Unit)
+case class StdOut(effect: Unit => Unit)

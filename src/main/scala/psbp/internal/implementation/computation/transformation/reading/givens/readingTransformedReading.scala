@@ -2,9 +2,9 @@ package psbp.internal.implementation.computation.transformation.reading.givens
 
 import psbp.external.specification.reading.Reading
 
-import psbp.internal.specification.computation.Computation
-
 import psbp.external.implementation.computation.ProgramFromComputation
+
+import psbp.internal.specification.computation.Computation
 
 import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
 

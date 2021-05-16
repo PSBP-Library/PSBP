@@ -15,10 +15,6 @@ import psbp.external.specification.construction.Construction
 
 import psbp.external.specification.condition.Condition
 
-import psbp.external.specification.production.Production
-
-import psbp.external.specification.consumption.Consumption
-
 import psbp.external.specification.function.{ 
   `(z&&y)>-->z`
   , `(z&&y)>-->y`
@@ -75,32 +71,4 @@ trait Program[>-->[- _, + _]]
   trait Else[Z, Y]:
     def Else(`z>-f->y`: => Z >--> Y): Z >--> Y
 
-def toMain[
-  Z, Y
-  , >-->[- _, + _]: [>-->[- _, + _]] =>> Production[>-->, Z]
-                  : Program
-                  : [>-->[- _, + _]] =>> Consumption[Z && Y, >-->]
-](`z>-->y`: Z >--> Y) =
-
-  val production = summon[Production[>-->, Z]]
-  import production.{
-    produce => `u>-->z`
-  }
-
-  val program = summon[Program[>-->]]
-  import program.Let    
-
-  val consumption = summon[Consumption[Z && Y, >-->]]
-  import consumption.{
-    consume => `(z&&y)>-->u`
-  }
-
-  `u>-->z`
-    >--> {
-      Let { 
-        `z>-->y`
-      } In { 
-        `(z&&y)>-->u`
-      }
-    }
 

@@ -7,9 +7,6 @@ import psbp.external.specification.types.{
   , ||
 }
 
-
-// function
-
 // construction
 
 def `(z&&y)=>z`[Z, Y]: (Z && Y) => Z =
@@ -40,11 +37,12 @@ def `(z&&b)=>(z||z)`[Z]: (Z && Boolean) => (Z || Z) = {
     Left(z)
   case (z, false) => 
     Right(z) 
-} 
+}
 
 def foldSum[Z, Y, X]: ((Y => Z) && (X => Z)) => (Y || X) => Z =
-  (`y=>z`, `x=>z`) =>
-    _.foldSum(`y=>z`, `x=>z`)
+  (`z=>x`, `y=>x`) => 
+    case Left(z) => `z=>x`(z)
+    case Right(y) =>`y=>x`(y)  
 
 // function
 

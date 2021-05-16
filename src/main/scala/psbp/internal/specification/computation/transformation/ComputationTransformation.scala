@@ -2,12 +2,12 @@ package psbp.internal.specification.computation.transformation
 
 import psbp.internal.specification.resulting.Resulting
 
-import psbp.internal.specification.computation.Computation
-
 import psbp.internal.specification.naturalTransformation.~>
   
-private[psbp] trait ComputationTransformation[F[+ _]: Resulting, T[+ _]]
-  extends Computation[T]:
+private[psbp] trait ComputationTransformation[
+  F[+ _]: Resulting 
+  , T[+ _]
+] extends Resulting[T]:
 
   // declared
 

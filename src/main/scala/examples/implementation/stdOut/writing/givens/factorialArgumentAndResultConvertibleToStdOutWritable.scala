@@ -10,11 +10,13 @@ import psbp.external.implementation.stdOut.StdOut
 
 // givens
 
-import psbp.external.implementation.stdOut.givens.convertibleToStdOutWritable
+import psbp.external.implementation.stdOut.givens.argumentAndResultConvertibleToStdOutWritable
 
-given String = "factorial"
+given ((BigInt && BigInt) => String) = 
+  (i, j) => 
+    s"applying factorial to argument $i yields result $j"
 
-given factorialConvertibleToStdOutWritable[
+given factorialArgumentAndResultConvertibleToStdOutWritable[
   >-->[- _, + _]: Program 
 ]: ConvertibleToWritable[(BigInt && BigInt), StdOut, >-->] =  
-  convertibleToStdOutWritable
+  argumentAndResultConvertibleToStdOutWritable

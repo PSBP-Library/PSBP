@@ -9,10 +9,6 @@ import psbp.external.implementation.active.{
 
 import psbp.internal.specification.computation.Computation
 
-// givens
-
-import psbp.external.implementation.computation.givens.programFromComputation
-
 private[psbp] given activeComputation: Computation[Active] with
 
   private[psbp] def result[Z]: Z => Active[Z] =
@@ -25,5 +21,9 @@ private[psbp] given activeComputation: Computation[Active] with
   ): Active[Y] =
     `z=>cy`(cz)
 
-given activeProgram: Program[`=>A`] = 
-  programFromComputation[Active]
+// givens
+
+// import psbp.external.implementation.computation.givens.programFromComputation
+
+// given activeProgram: Program[`=>A`] = 
+//   programFromComputation[Active]
