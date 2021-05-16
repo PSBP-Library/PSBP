@@ -22,5 +22,5 @@ import psbp.external.implementation.active.{
 
 import psbp.internal.implementation.computation.transformation.writing.writingTransformedMaterialization
 
-given activeWritingMaterialization[W: Writable]: Materialization[`=>AW`[W], Unit, (W, Unit)] =
+given [W: Writable]: Materialization[`=>AW`[W], Unit, (W, Unit)] =
   writingTransformedMaterialization[W, Active, Unit, Unit]

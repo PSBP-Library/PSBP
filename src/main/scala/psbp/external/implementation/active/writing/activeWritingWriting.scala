@@ -17,5 +17,5 @@ import psbp.external.implementation.active.{
 
 import psbp.internal.implementation.computation.transformation.writing.writingTransformedWriting
 
-given activeWritingWriting[W: Writable]: Writing[W, `=>AW`[W]] = 
+given [W: Writable]: Writing[W, `=>AW`[W]] = 
   writingTransformedWriting[W, Active]

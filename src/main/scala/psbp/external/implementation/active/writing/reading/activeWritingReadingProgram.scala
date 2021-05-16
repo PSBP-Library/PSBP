@@ -21,7 +21,7 @@ import psbp.external.implementation.active.writing.{
 
 import psbp.internal.implementation.computation.transformation.reading.readingTransformedComputation
 
-private[psbp] given activeWritingReadingComputation[
+private[psbp] given [
   W: Writable
   , R
 ]: Computation[ActiveWritingReading[W, R]] = 
@@ -29,7 +29,7 @@ private[psbp] given activeWritingReadingComputation[
 
 import psbp.external.implementation.computation.programFromComputation
 
-given activeWritingReadingProgram[
+given [
   W: Writable
   , R
 ]: Program[`=>AWR`[W, R]] = 

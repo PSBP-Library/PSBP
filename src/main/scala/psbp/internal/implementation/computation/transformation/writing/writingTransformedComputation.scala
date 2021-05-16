@@ -12,8 +12,6 @@ import psbp.internal.specification.naturalTransformation.~>
 
 import psbp.internal.specification.computation.transformation.ComputationTransformation
 
-// import psbp.internal.implementation.computation.transformation.writing.WritingTransformed
-
 private[psbp] given writingTransformedComputation[
   W : Writable
   , C[+ _]: Computation

@@ -1,6 +1,6 @@
-package examples.implementation.stdIn.reading
+package examples.implementation.stdIn
 
 import psbp.external.implementation.stdIn.stdInBigInt.effect
 
-given bigInt: BigInt = 
+given BigInt = 
   effect(())

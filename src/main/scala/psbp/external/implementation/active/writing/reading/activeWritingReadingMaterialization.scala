@@ -22,7 +22,7 @@ import psbp.external.implementation.active.writing.{
 
 import psbp.internal.implementation.computation.transformation.reading.readingTransformedMaterialization
 
-given activeWritingReadingMaterialization[
+given [
   W: Writable
   , R
 ]: Materialization[

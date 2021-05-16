@@ -6,8 +6,6 @@ import psbp.external.implementation.computation.ProgramFromComputation
 
 import psbp.internal.specification.computation.Computation
 
-// import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
-
 private[psbp] given readingTransformedReading[
   R
   , C[+ _]: Computation

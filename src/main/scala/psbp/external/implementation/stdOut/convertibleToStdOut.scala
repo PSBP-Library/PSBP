@@ -12,22 +12,24 @@ import psbp.external.specification.writing.{
 
 import psbp.external.implementation.stdOut.StdOut
 
-given tupleConvertibleToStdOutWritable[
-  Z
-  , Y
-  , >-->[- _, + _]: Program
-](using message: (Z && Y) => String)
-  : ConvertibleToWritable[(Z && Y), StdOut, >-->] with
+// todo: perhaps get rid of using via type class AsMessage
 
-  override def convert: (Z && Y) >--> StdOut =
+given convertibleToStdOut[
+  Z
+  , >-->[- _, + _]: Program
+](using message: Z => String)
+  : ConvertibleToWritable[Z, StdOut, >-->] with
+
+  override def convert: Z >--> StdOut =
+
     object function {
 
-      val convert: (Z && Y) => StdOut =
-        (z, y) =>
+      val convert: Z => StdOut =
+        z =>
           StdOut{ _ =>
-            println(message(z, y))
+            println(message(z))
           }
 
     }
 
-    function.convert asProgram
+    function.convert asProgram    

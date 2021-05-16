@@ -1,4 +1,4 @@
 package examples.implementation.pleaseTypeAnInteger
 
-given pleaseTypeAnInteger: Unit = 
+given Unit = 
   println("Please type an integer")

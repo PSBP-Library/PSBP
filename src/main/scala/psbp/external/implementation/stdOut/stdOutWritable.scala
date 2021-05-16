@@ -4,9 +4,7 @@ import psbp.external.specification.types.&&
 
 import psbp.external.specification.writing.Writable
 
-// import psbp.external.implementation.stdOut.StdOut
-
-given stdOutWritable: Writable[StdOut] with
+given Writable[StdOut] with
 
   // defined
 

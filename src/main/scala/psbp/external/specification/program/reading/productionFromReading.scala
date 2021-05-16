@@ -4,7 +4,7 @@ import psbp.external.specification.production.Production
 
 import psbp.external.specification.reading.Reading
 
-given productionFromReading [
+given [
   Z: [Z] =>> Reading[Z, >-->]
   , >-->[- _, + _]  
 ]: Production[>-->, Z] with

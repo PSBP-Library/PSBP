@@ -33,7 +33,7 @@ import psbp.external.implementation.active.writing.reading.{
     given Unit
   }
   
-  import examples.implementation.stdIn.reading.{
+  import examples.implementation.stdIn.{
     given BigInt
   }
 

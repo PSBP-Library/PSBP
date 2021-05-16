@@ -8,13 +8,13 @@ import psbp.internal.specification.naturalTransformation.~>
 
 import psbp.internal.specification.computation.transformation.ComputationTransformation
 
-// import psbp.internal.implementation.computation.transformation.reading.ReadingTransformed
-
 private[psbp] given readingTransformedComputation[
   R
   , C[+ _]: Computation
-]: ComputationTransformation[C, ReadingTransformed[R, C]] 
-  with Computation[ReadingTransformed[R, C]] with
+]: ComputationTransformation[
+  C
+  , ReadingTransformed[R, C]
+] with Computation[ReadingTransformed[R, C]] with
 
   private type F[+Y] = C[Y]
   private type T[+Y] = ReadingTransformed[R, C][Y]

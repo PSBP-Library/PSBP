@@ -16,7 +16,7 @@ import psbp.external.implementation.active.{
 
 import psbp.internal.implementation.computation.transformation.writing.writingTransformedComputation
 
-private[psbp] given activeWritingComputation[W: Writable]: Computation[ActiveWriting[W]] = 
+private[psbp] given [W: Writable]: Computation[ActiveWriting[W]] = 
   writingTransformedComputation[W, Active]
 
 // import psbp.external.implementation.active.writing.`=>AW`

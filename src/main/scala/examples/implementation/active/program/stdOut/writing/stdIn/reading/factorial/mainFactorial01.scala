@@ -29,13 +29,19 @@ import psbp.external.implementation.active.writing.reading.{
   
 @main def mainFactorial01(args: String*): Unit =
 
-  import examples.implementation.pleaseTypeAnInteger.{
-    given Unit
-  }
+  // import examples.implementation.pleaseTypeAnInteger.{
+  //   given Unit
+  // }
 
-  import examples.implementation.stdIn.reading.{
-    given BigInt
-  }
+  // import examples.implementation.stdIn.{
+  //   given BigInt
+  // }
+
+  given Unit = println("Please type an integer")
+
+  import psbp.external.implementation.stdIn.stdInBigInt.effect
+
+  given BigInt = effect(())
 
   val (stdOut, _) = materializedMainFactorial
 

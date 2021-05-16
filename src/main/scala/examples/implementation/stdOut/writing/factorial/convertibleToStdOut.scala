@@ -8,15 +8,13 @@ import psbp.external.specification.writing.ConvertibleToWritable
 
 import psbp.external.implementation.stdOut.StdOut
 
-// givens
-
-import psbp.external.implementation.stdOut.tupleConvertibleToStdOutWritable
+import psbp.external.implementation.stdOut.convertibleToStdOut
 
 given ((BigInt && BigInt) => String) = 
   (i, j) => 
     s"applying factorial to argument $i yields result $j"
 
-given convertibleToStdOutWritable[
+given [
   >-->[- _, + _]: Program 
 ]: ConvertibleToWritable[(BigInt && BigInt), StdOut, >-->] =  
-  tupleConvertibleToStdOutWritable
+  convertibleToStdOut

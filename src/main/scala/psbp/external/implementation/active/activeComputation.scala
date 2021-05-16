@@ -9,7 +9,7 @@ import psbp.external.implementation.active.{
 
 import psbp.internal.specification.computation.Computation
 
-private[psbp] given activeComputation: Computation[Active] with
+private[psbp] given Computation[Active] with
 
   private[psbp] def result[Z]: Z => Active[Z] =
     z =>
