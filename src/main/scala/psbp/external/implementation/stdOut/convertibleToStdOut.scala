@@ -12,13 +12,13 @@ import psbp.external.specification.writing.{
 
 import psbp.external.implementation.stdOut.StdOut
 
-// todo: perhaps get rid of using via type class AsMessage
-
 given convertibleToStdOut[
-  Z
+  Z: AsMessage
   , >-->[- _, + _]: Program
-](using message: Z => String)
-  : ConvertibleToWritable[Z, StdOut, >-->] with
+] : ConvertibleToWritable[Z, StdOut, >-->] with
+
+  private val asMessage: AsMessage[Z] = summon[AsMessage[Z]]
+  import asMessage.message
 
   override def convert: Z >--> StdOut =
 
@@ -32,4 +32,4 @@ given convertibleToStdOut[
 
     }
 
-    function.convert asProgram    
+    function.convert asProgram
