@@ -1,38 +1,38 @@
 package examples.implementation.stdOut.writing.bigInt.reading
 
-import psbp.external.specification.types.&&
+import plp.external.specification.types.&&
 
-import psbp.external.specification.program.Program
+import plp.external.specification.program.Program
 
-import psbp.external.specification.program.main.toMain
+import plp.external.specification.program.main.toMain
 
-import psbp.external.specification.production.Production
+import plp.external.specification.production.Production
 
-import psbp.external.specification.consumption.Consumption
+import plp.external.specification.consumption.Consumption
 
-import psbp.external.specification.reading.Reading
+import plp.external.specification.reading.Reading
 
-import psbp.external.specification.writing.Writable
+import plp.external.specification.writing.Writable
 
-import psbp.external.specification.writing.ConvertibleToWritable
+import plp.external.specification.writing.ConvertibleToWritable
 
-import psbp.external.specification.writing.Writing
+import plp.external.specification.writing.Writing
 
-import psbp.external.specification.materialization.Materialization
+import plp.external.specification.materialization.Materialization
 
-import psbp.external.implementation.stdOut.StdOut
+import plp.external.implementation.stdOut.StdOut
 
 import examples.specification.program.factorial
 
-import psbp.external.specification.program.reading.{
+import plp.external.specification.reading.{
   given Production[?, ?]
 }
 
-import psbp.external.specification.program.writing.{
+import plp.external.specification.program.writing.{
   given Consumption[?, ?]
 }
 
-import psbp.external.implementation.stdOut.{
+import plp.external.implementation.stdOut.{
   given Writable[StdOut]
 }
 
@@ -44,11 +44,11 @@ def materializedMainFactorial[
   >-->[- _, + _]: Program
                 : [>-->[- _, + _]] =>> Reading[BigInt, >-->]
                 : [>-->[- _, + _]] =>> Writing[StdOut, >-->]
-                : [>-->[- _, + _]] =>> Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))]
-]: Unit ?=> (BigInt ?=> (StdOut, (StdOut, Unit))) =
+                : [>-->[- _, + _]] =>> Materialization[>-->, Unit, BigInt ?=> (StdOut, Unit)]
+]: Unit ?=> (BigInt ?=> (StdOut, Unit)) =
 
-  val materialization: Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))] =
-    summon[Materialization[>-->, Unit, BigInt ?=> (StdOut, (StdOut, Unit))]]
+  val materialization: Materialization[>-->, Unit, BigInt ?=> (StdOut, Unit)] =
+    summon[Materialization[>-->, Unit, BigInt ?=> (StdOut, Unit)]]
   import materialization.materialize 
 
   materialize(toMain(factorial))

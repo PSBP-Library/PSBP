@@ -2,9 +2,9 @@ package examples.specification.function
 
 import scala.language.postfixOps
 
-import psbp.external.specification.types.&&
+import plp.external.specification.types.&&
 
-import psbp.external.specification.function.Function
+import plp.external.specification.function.Function
 
 object function {
 

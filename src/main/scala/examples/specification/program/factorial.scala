@@ -1,6 +1,6 @@
 package examples.specification.program
 
-import psbp.external.specification.program.Program
+import plp.external.specification.program.Program
 
 import examples.specification.function.{ 
   isZero

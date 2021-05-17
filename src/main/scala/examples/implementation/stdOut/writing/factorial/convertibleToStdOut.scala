@@ -1,18 +1,18 @@
 package examples.implementation.stdOut.writing.factorial
 
-import psbp.external.specification.types.&&
+import plp.external.specification.types.&&
 
-import psbp.external.specification.program.Program
+import plp.external.specification.program.Program
 
-import psbp.external.specification.writing.ConvertibleToWritable
+import plp.external.specification.writing.ConvertibleToWritable
 
-import psbp.external.implementation.stdOut.StdOut
+import plp.external.implementation.stdOut.StdOut
 
-import psbp.external.implementation.stdOut.AsMessage
+import plp.external.implementation.stdOut.ToMessage
 
-import psbp.external.implementation.stdOut.convertibleToStdOut
+import plp.external.implementation.stdOut.givenConvertibleToStdOut
 
-given AsMessage[BigInt && BigInt] with 
+given ToMessage[BigInt && BigInt] with 
   override val message: (BigInt && BigInt) => String =
     (i, j) => 
       s"applying factorial to argument $i yields result $j" 
@@ -20,4 +20,4 @@ given AsMessage[BigInt && BigInt] with
 given [
   >-->[- _, + _]: Program 
 ]: ConvertibleToWritable[(BigInt && BigInt), StdOut, >-->] =  
-  convertibleToStdOut
+  givenConvertibleToStdOut
