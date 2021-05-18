@@ -1,6 +1,6 @@
 package plp.external.specification.reading
 
-trait Reading[R, >-->[- _, + _]]:
+trait Reading[+R, >-->[- _, + _]]:
 
   // declared
 

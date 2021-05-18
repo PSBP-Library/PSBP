@@ -1,12 +1,12 @@
-package plp.external.specification.production
+// package plp.external.specification.production
 
-trait Production[>-->[- _, + _], +Z]:
+// trait Production[>-->[- _, + _], +Z]:
 
-  // declared
+//   // declared
 
-  private[plp] def produce: Unit >--> Z
+//   private[plp] def produce: Unit >--> Z
 
-  // defined
+//   // defined
 
-  private[plp] def `u>-->z`: Unit >--> Z =
-    produce
+//   private[plp] def `u>-->z`: Unit >--> Z =
+//     produce
