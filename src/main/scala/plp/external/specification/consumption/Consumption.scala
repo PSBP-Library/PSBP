@@ -1,12 +1,12 @@
-package plp.external.specification.consumption
+// package plp.external.specification.consumption
 
-trait Consumption[-Y, >-->[- _, + _]]:
+// trait Consumption[-Y, >-->[- _, + _]]:
 
-  // declared
+//   // declared
 
-  private[plp] def consume: Y >--> Unit
+//   private[plp] def consume: Y >--> Unit
 
-  // defined
+//   // defined
 
-  private[plp] def `y>-->u`: Y >--> Unit =
-    consume
+//   private[plp] def `y>-->u`: Y >--> Unit =
+//     consume

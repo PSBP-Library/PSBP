@@ -6,10 +6,6 @@ import plp.external.specification.program.Program
 
 import plp.external.specification.program.main.toMain
 
-// import plp.external.specification.production.Production
-
-import plp.external.specification.consumption.Consumption
-
 import plp.external.specification.reading.Reading
 
 import plp.external.specification.writing.Writable
@@ -23,14 +19,6 @@ import plp.external.specification.materialization.Materialization
 import plp.external.implementation.stdOut.StdOut
 
 import examples.specification.program.factorial
-
-// import plp.external.specification.reading.{
-//   given Production[?, ?]
-// }
-
-import plp.external.specification.program.writing.{
-  given Consumption[?, ?]
-}
 
 import plp.external.implementation.stdOut.{
   given Writable[StdOut]

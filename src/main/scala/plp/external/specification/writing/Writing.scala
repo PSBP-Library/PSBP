@@ -1,6 +1,6 @@
 package plp.external.specification.writing
 
-trait Writing[W: Writable, >-->[- _, + _]]:
+trait Writing[-W: Writable, >-->[- _, + _]]:
 
   // declared
   
