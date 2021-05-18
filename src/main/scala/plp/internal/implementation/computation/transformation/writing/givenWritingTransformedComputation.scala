@@ -10,12 +10,12 @@ import plp.internal.specification.computation.Computation
 
 import plp.internal.specification.naturalTransformation.~>
 
-import plp.internal.specification.computation.transformation.ComputationTransformation
+import plp.internal.specification.transformation.Transformation
 
 private[plp] given givenWritingTransformedComputation[
   W : Writable
   , D[+ _]: Computation
-]: ComputationTransformation[
+]: Transformation[
   D
   , WritingTransformed[W, D]
 ] with Computation[WritingTransformed[W, D]] with 

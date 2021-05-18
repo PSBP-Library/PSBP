@@ -10,9 +10,9 @@ import plp.internal.specification.computation.Computation
 
 private[plp] given Computation[Active] with
 
-  private[plp] def `i~>c`: Id ~> Active =
+  private[plp] def `i~>c`: I ~> Active =
     new {
-      override private[plp] def apply[Z]: Id[Z] => Active[Z] =
+      override private[plp] def apply[Z]: I[Z] => Active[Z] =
         z =>
           z
     }

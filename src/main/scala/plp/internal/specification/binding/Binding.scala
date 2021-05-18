@@ -1,5 +1,7 @@
 package plp.internal.specification.binding
 
+import plp.internal.specification.resulting.Resulting
+
 import plp.internal.specification.naturalTransformation.~>
 
 private[plp] trait Binding[C[+ _]]:

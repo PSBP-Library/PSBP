@@ -6,12 +6,12 @@ import plp.internal.specification.computation.Computation
 
 import plp.internal.specification.naturalTransformation.~>
 
-import plp.internal.specification.computation.transformation.ComputationTransformation
+import plp.internal.specification.transformation.Transformation
 
 private[plp] given givenReadingTransformedComputation[
   R
   , C[+ _]: Computation
-]: ComputationTransformation[
+]: Transformation[
   C
   , ReadingTransformed[R, C]
 ] with Computation[ReadingTransformed[R, C]] with
