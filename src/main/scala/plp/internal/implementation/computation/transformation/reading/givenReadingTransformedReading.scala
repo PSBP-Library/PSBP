@@ -21,7 +21,7 @@ private[plp] given givenReadingTransformedReading[
 
   private val computation = summon[Computation[F]]
   import computation.{ 
-    result => resultF
+    `i~>c` => resultF
   }
 
   override def read: Unit `=>T` R =

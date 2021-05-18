@@ -14,21 +14,20 @@ import plp.internal.specification.computation.transformation.ComputationTransfor
 
 private[plp] given givenWritingTransformedComputation[
   W : Writable
-  , C[+ _]: Computation
+  , D[+ _]: Computation
 ]: ComputationTransformation[
-  C
-  , WritingTransformed[W, C]
-] with Computation[WritingTransformed[W, C]] with 
+  D
+  , WritingTransformed[W, D]
+] with Computation[WritingTransformed[W, D]] with 
 
-  private type F[+Y] = C[Y]
-  private type T[+Y] = WritingTransformed[W, C][Y]
+  private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
+  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val computation = summon[Computation[F]]
+  private val computation = summon[Computation[D]]
   import computation.{ 
-    result => resultF
-    , bind => bindF
+    `i~>c` => `i~>d`
+    , bind => bindD
   }
 
   private val writable = summon[Writable[W]]
@@ -37,17 +36,17 @@ private[plp] given givenWritingTransformedComputation[
     , append
   }  
 
-  override private[plp] val `f~>t`: F ~> T = new {
-    def apply[Z]: F[Z] => T[Z] =
-      fz =>
-        bindF(fz, z => resultF((nothing, z)))
+  override private[plp] val `d~>c`: D ~> C = new {
+    def apply[Z]: D[Z] => C[Z] =
+      dz =>
+        bindD(dz, z => `i~>d`((nothing, z)))
   }  
 
   override private[plp] def bind[Z, Y](
-    tz: T[Z]
-    , `z=>ty`: => Z => T[Y]
-  ): T[Y] =
-    bindF(tz, (w1, z) =>
-      val (w2, y): W && Y = `z=>ty`(z)
-      resultF(append(w1, w2), y)
+    cz: C[Z]
+    , `z=>cy`: => Z => C[Y]
+  ): C[Y] =
+    bindD(cz, (w1, z) =>
+      val (w2, y): W && Y = `z=>cy`(z)
+      `i~>d`(append(w1, w2), y)
     )

@@ -26,7 +26,7 @@ private[plp] given givenReadingTransformedComputation[
     bind => bindF
   }
 
-  override private[plp] val `f~>t`: F ~> T = 
+  override private[plp] val `d~>c`: F ~> T = 
     new {
       def apply[Z]: F[Z] => T[Z] =
         fz => 

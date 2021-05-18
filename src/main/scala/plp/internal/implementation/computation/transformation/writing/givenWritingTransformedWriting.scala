@@ -11,22 +11,21 @@ import plp.internal.specification.computation.Computation
 
 private[plp] given givenWritingTransformedWriting[
   W: Writable
-  , C[+ _]: Computation
+  , D[+ _]: Computation
 ]: Writing[
   W
-  , ProgramFromComputation[WritingTransformed[W, C]]
+  , ProgramFromComputation[WritingTransformed[W, D]]
 ] with
 
-  private type F[+Y] = C[Y]
-  private type T[+Y] = WritingTransformed[W, C][Y]
+  private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
+  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val computation = summon[Computation[F]]
+  private val computation = summon[Computation[D]]
   import computation.{ 
-    result => resultF
+    `i~>c` => `i~>d`
   }
 
-  override def write: W `=>T` Unit =
+  override def write: W `=>C` Unit =
     w =>
-      resultF((w, ()))
+      `i~>d`((w, ()))
