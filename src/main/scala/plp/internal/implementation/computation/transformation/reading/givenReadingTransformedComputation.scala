@@ -10,31 +10,30 @@ import plp.internal.specification.transformation.Transformation
 
 private[plp] given givenReadingTransformedComputation[
   R
-  , C[+ _]: Computation
+  , D[+ _]: Computation
 ]: Transformation[
-  C
-  , ReadingTransformed[R, C]
-] with Computation[ReadingTransformed[R, C]] with
+  D
+  , ReadingTransformed[R, D]
+] with Computation[ReadingTransformed[R, D]] with
 
-  private type F[+Y] = C[Y]
-  private type T[+Y] = ReadingTransformed[R, C][Y]
+  private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>T` = [Z, Y] =>> ProgramFromComputation[T][Z, Y]
+  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val computation = summon[Computation[F]]
+  private val computation = summon[Computation[D]]
   import computation.{ 
-    bind => bindF
+    bind => bindD
   }
 
-  override private[plp] val `d~>c`: F ~> T = 
+  override private[plp] val `d~>c`: D ~> C = 
     new {
-      def apply[Z]: F[Z] => T[Z] =
-        fz => 
-          fz
+      def apply[Z]: D[Z] => C[Z] =
+        dz => 
+          dz
     }  
 
   override private[plp] def bind[Z, Y](
-    tz: T[Z]
-    , `z=>ty`: => Z => T[Y]
-  ): T[Y] =
-    bindF(tz, z => `z=>ty`(z))
+    cz: C[Z]
+    , `z=>cy`: => Z => C[Y]
+  ): C[Y] =
+    bindD(cz, z => `z=>cy`(z))

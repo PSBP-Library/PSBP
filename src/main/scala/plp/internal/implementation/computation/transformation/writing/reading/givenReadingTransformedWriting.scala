@@ -16,23 +16,22 @@ import plp.internal.implementation.computation.transformation.reading.ReadingTra
 private[plp] given givenReadingTransformedWriting[
   R
   , W: Writable
-  , C[+ _]: [C[+ _]] =>> Writing[W, ProgramFromComputation[C]]
+  , D[+ _]: [D[+ _]] =>> Writing[W, ProgramFromComputation[D]]
 ]: Writing[
   W
-  , ProgramFromComputation[ReadingTransformed[R, C]]
+  , ProgramFromComputation[ReadingTransformed[R, D]]
 ] with
 
-  private type F[+Y] = C[Y]
-  private type T[+Y] = ReadingTransformed[R, C][Y]
+  private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>F` = [Z, Y] =>> Z => F[Y]
-  private type `=>T` = [Z, Y] =>> Z => T[Y]
+  private type `=>D` = [Z, Y] =>> Z => D[Y]
+  private type `=>C` = [Z, Y] =>> Z => C[Y]
 
-  private val writing = summon[Writing[W, `=>F`]]
+  private val writing = summon[Writing[W, `=>D`]]
   import writing.{
     write => writeF
   }
 
-  override def write: W `=>T` Unit =
+  override def write: W `=>C` Unit =
     w =>
       writeF(w)

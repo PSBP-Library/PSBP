@@ -6,6 +6,8 @@ import plp.external.specification.types.&&
 
 import plp.external.specification.program.Program
 
+import plp.external.specification.writing.ToString
+
 import plp.external.specification.writing.{
   ConvertibleToWritable
 }
@@ -13,12 +15,12 @@ import plp.external.specification.writing.{
 import plp.external.implementation.stdOut.StdOut
 
 given givenConvertibleToStdOut[
-  Z: ToMessage
+  Z: ToString
   , >-->[- _, + _]: Program
 ] : ConvertibleToWritable[Z, StdOut, >-->] with
 
-  private val toMessage: ToMessage[Z] = summon[ToMessage[Z]]
-  import toMessage.message
+  private val toString: ToString[Z] = summon[ToString[Z]]
+  import toString._toString
 
   override private[plp] def convert: Z >--> StdOut =
 
@@ -27,7 +29,7 @@ given givenConvertibleToStdOut[
       val convert: Z => StdOut =
         z =>
           StdOut{ _ =>
-            println(message(z))
+            println(_toString(z))
           }
 
     }

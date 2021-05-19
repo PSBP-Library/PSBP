@@ -8,42 +8,41 @@ import plp.internal.specification.computation.Computation
 
 private[plp] given givenReadingTransformedMaterialization[
   R
-  , C[+ _]: Computation
-          : [C[+ _]] =>> Materialization[
-            ProgramFromComputation[C]
+  , D[+ _]: Computation
+          : [D[+ _]] =>> Materialization[
+            ProgramFromComputation[D]
             , Z
             , Y
             ]
   , Z, Y
 ]: Materialization[
-  ProgramFromComputation[ReadingTransformed[R, C]]
+  ProgramFromComputation[ReadingTransformed[R, D]]
   , Z, 
-  R ?=> C[Y]
+  R ?=> D[Y]
 ] with
 
-  private type F[+Z] = C[Z]
-  private type T[+Z] = ReadingTransformed[R, C][Z]
+  private type C[+Z] = ReadingTransformed[R, D][Z]
 
-  private type `=>F`= [Z, Y] =>> ProgramFromComputation[F][Z, Y]
-  private type `=>T`= [Z, Y] =>> ProgramFromComputation[T][Z, Y]
+  private type `=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
+  private type `=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val materialization = summon[Materialization[`=>F`, Z, Y]]
+  private val materialization = summon[Materialization[`=>D`, Z, Y]]
   import materialization.{ 
     materialize => materializeF 
   }
 
-  private val computation = summon[Computation[F]]
+  private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => resultF
-    , bind => bindF 
+    `i~>c` => `i~>d`
+    , bind => bindD 
   }
 
-  override val materialize: (Unit `=>T` Unit) => Z ?=> (R ?=> C[Y]) =
+  override val materialize: (Unit `=>C` Unit) => Z ?=> (R ?=> D[Y]) =
     `u=>tu` =>
-      bindF(
+      bindD(
         `u=>tu`(())
         , _ => 
-            val y = materializeF(resultF.apply)
-            resultF(y)
+            val y = materializeF(`i~>d`.apply)
+            `i~>d`(y)
       )
   

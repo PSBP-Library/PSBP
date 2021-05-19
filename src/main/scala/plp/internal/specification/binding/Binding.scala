@@ -2,9 +2,12 @@ package plp.internal.specification.binding
 
 import plp.internal.specification.resulting.Resulting
 
+import plp.internal.specification.joining.Joining
+
 import plp.internal.specification.naturalTransformation.~>
 
-private[plp] trait Binding[C[+ _]]:
+private[plp] trait Binding[C[+ _]]
+  extends Joining[C]:
 
   // declared
 
@@ -19,15 +22,11 @@ private[plp] trait Binding[C[+ _]]:
     private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
       bind(cz, `z=>cy`)
         
-  type CC[+Z] = C[C[Z]]
-
   private[plp] def join[Z]: CC ~> C =
     new {
       override private[plp] def apply[Z]: CC[Z] => C[Z] =
-       ccz =>
-         bind(ccz, identity)   
+        _ >= identity
     }
-
 
 
    
