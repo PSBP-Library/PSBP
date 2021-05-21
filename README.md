@@ -2,56 +2,17 @@
 
 ## Introduction
 
+The introduction of this courses tries to set the scene of the core content of the course.
+
+First of all, the course is illustrated with code, more precisely `Scala` code, even more precisely `Scala 3` code.
+
+When dealing with code related concepts `Scala 3` is *implicit*, in other words, it is not explicitely mentioned any more.
+
 **Warning** 
 
-The introduction of this courses is not *sound* and *complete* *at all*.
+The introduction of this courses is not *sound* *at all*.
 
-It tries to set the scene of the course.
-
-The core content of this course *is* sound and complete in as far as it is based upon *specification* and *implementation* `Scala` *code* that is *type correct*.
-
-### Functional programming
-
-Functional programming is about the mutual recursive relation between *functions* and *expressions*.
-
-Expressions are used to define functions with using *abstraction*, abstracting *values* out of expressions.
-
-Functions are used to define expressions with using *application*.
-
-### The essence of functional programming
-
-In 1992, in the *proceedings* of the 19th *Symposium on Principles of programming*, *Philip Wadler* published *The essence of functional programming*.
-
-Expressions are generalized to *computations* to deal with *impure computation execution* ingredients that go beyond the *pure expression evaluation* ingredients.
-
-After all, programming is not only about 
-
-- *internally*, *always*, *succesfully*, *transforming* an *argument* to the *same* *result*
-
-but also about such things as
-
-- *state handling*, to, *internally*, *sometimes*, deal with *random* results,
-- *failure handling*, to, *internally*, *sometimes*, deal with *unsuccessful* results,
-- *input/output*, to, *externally*, deal with *program composition*.
-- ...
-
-### Function-level programming
-
-In 1977, in his *Turing Award* lecture *Can Programming be Liberated from the von Neumann Style?*, *John Backus* described `FP`, a *function-level* programming language.
-
-Function-level programming restricts functional programming to *function-typed* expressions.
-
-In 1977, long before 1992, `FP` did not deal with any impure ingredients at all.
-
-### The essence of function-level programming
- 
-This course generalizes function-level programming to *program-level* programming.
-
-Functions are generalized to *programs* to deal with impure ingredients.
-
-So how does this course establish this generalization?
-
-Among others by changing from a programming *language* that *does not* allow for *different implementations of its specification* and is *not* *extendible*, to a programming *library* that *does* allow for *different implementations of its specifications* and *is* *extendible*.
+The core content of this course *is* sound in as far as the code that illustrates it is *type correct*.
 
 ## Problem domains
 
@@ -61,15 +22,17 @@ There are also a few problem domains we have lot of knowledge about.
 
 But what *is* the *essence* of a problem domain?
 
-### Domain specific language (DSL)
+## Domain specific language (DSL) library
 
-Wriring a *domain specific language* library for a specific problem domain is one way to reveal the essence of that problem domain.
+Writing a *domain specific language* library for a specific problem domain is one way to reveal the essence of that problem domain.
 
 Think of writing a domain specific language library as teaching about the essence of a specific problem domain to a *programming language compiler*.
 
 You cannot fool a compiler!
 
-Ideally, domain specific language libraries strictly separates *specifications* from *implementations*.
+## Specifications and implementations
+
+Ideally libraries strictly separates *specifications* from *implementations*.
 
 ## Specifications
 
@@ -77,7 +40,7 @@ Specifying things in `Scala` is done by *classifying* them in *classes*, also kn
 
 Specifications are `trait`'s.
 
-We almost exclusively limit ourselves to library specification `trait`'s that declare *higher kinded type classes*, typically *binary type constructor classes* and *unary type constructor classes*.
+We almost exclusively limit ourselves to library specification `trait`'s that *declare* *higher kinded type classes*, typically *binary type constructor classes* and *unary type constructor classes*.
 
 ## Implementations
 
@@ -85,7 +48,7 @@ Implementing a specified class is done by *giving* a *class instance*.
 
 Implementations are `given`'s.
 
-The library specification `given`'s define *higher kinded type class instances*, typically *binary type constructor class instances* and *unary type constructor class instances*.
+The library specification `given`'s *define* *higher kinded type class instances*, typically *binary type constructor class instances* and *unary type constructor class instances*.
 
 ## Programming problem domain
 
@@ -93,85 +56,180 @@ The *programming problem domain* is a problem domain like any other one, so it m
 
 The course is based upon a `Scala` library, `PLP`, standing for, *program-level programming*.
 
-## Programs and computations
+## Functional programming
+
+Functional programming is about the mutual recursive relation between *functions* and *expressions*.
+
+Functions can be defined in terms of expressions using *abstractions* obtaining functions with *function parameters* corresponding to *expression context bounds* of *expression templates*.
+
+Expressions can be defined in terms of functions using *application* obtaining expressions by substituting argument expressions for function parameters and corresponding expression context bounds of expression templates.
+
+## The essence of functional programming
+
+In 1992, in the *proceedings* of the 19th *Symposium on Principles of programming*, *Philip Wadler* published *The essence of functional programming*.
+
+Expressions are generalized to *computations* to deal with *impure computation execution ingredients* that go beyond the *pure expression evaluation ingredients*.
+
+After all, programming is not only about pure functions that
+
+- *internally*, *always*, *succesfully*, *transform* an *argument* to the *same* *result*
+
+but also about such things as
+
+- *state handling*, to, *internally*, *sometimes*, deal with *random* results,
+- *failure handling*, to, *internally*, *sometimes*, deal with *unsuccessful* results,
+
+and
+- *input/output*, to, *externally*, deal with *program composition*.
+
+and many more programming capabilities.
+
+## Function-level programming
+
+In 1977, in his *Turing Award* lecture *Can Programming be Liberated from the von Neumann Style?*, *John Backus* described `FP`, a *function-level* programming language.
+
+The story goes that he designed `FP` as an excuse for `Fortran`, the programmng language for which he received the Turing Award.
+
+Function-level programming restricts functional programming to *function-valued* expressions.
+
+It makes use of the following pure capabilities
+
+- a set of *primitive functions*
+
+and
+
+- function combinators
+
+  - *composition*, functions can be *sequentially composed*
+  - *construction*, functions can be used to *construct product based data*
+  - *condition*, functions can be composed to *perform conditional sum based logic*
+
+and
+
+- sequencing
+
+  -- functions can *aggregate sequences of values to results*
+
+In 1977, long before 1992, `FP` did not deal with any impure capabilities at all.
+
+## The essence of function-level programming
+ 
+This course generalizes function-level programming to *program-level* programming.
+
+Recall that expressions are generalized to computations to deal with impure capabilities.
+
+Much in the same way functions are generalized to *programs* to deal with impure capabilities.
+
+So how does this course establish this generalization?
+
+Among others by changing from a programming *language* that *does not* allow for *different implementations* of its *specification* and is *not* *extendible*, to a programming *library* that *does* allow for *different implementations* of its *specifications* and *is* *extendible*.
+
+## Binary program type constructors and unary computation type constructors
 
 The `PLP` library has an *external specification* part with corresponding *external implementations*, and an *internal specification* part with corresponding *internal implementations*.
 
 The external specification part is a *DSL for programming*.
 
-The external specification `trait`'s specify *programs* of type `Z >--> Y` that *generalize functions* of type `Z => Y`.
+*Binary program type constructors* `>-->[- _, + _]` are specified as `trait`'s, referred to as program `trait`'s.
+
+The members of program `trait`'s are referred to as *program capabilities*.
 
 The internal specification part is a *DSL for computing*.
 
-The internal specification `trait`'s specify *computations* of type `C[Y]` that *generalize expressions* of type `Y`.
+*Unary computation type constructors* `C[+ _]` are specified as `trait`'s, referred to as computation `trait`'s.
+
+The members of computation `trait`'s are referred to as *computation execution ingredients*.
+
+The *variance annotations*, `-` for *contravariance* resp. `+` for *covariance*, specify the *require less*, for arguments, resp. *provide more*, for results, programming principle.
+
+## Programs and computations
+
+*Programs* of type `Z >--> Y` are defined in terms of program capabilities.
+
+They are *specifications of generalizations of functions* of type `Z => Y`.
 
 The external programming DSL of the `PLP` library is a programming interface for *application* developers.
 
+It is intructive to think of functions resp. programs are *denotational* artifacts. 
+
+At *development time* they are *definitions of function capabilities* resp. *declarations of program capabilities*.
+
+*Computations* of type `C[Y]` are defined in terms of computation execution ingredients.
+
+They are *specifications of generalizations of expressions* of type `Y`.
+
 The internal, `private[plp]`, computing DSL of the `PLP` library is a programming interface for *library* developers.
+
+It is intructive to think of expressions resp. computations are *operational* artifacts.
+
+At *runtime* they are evaluated  to a result resp. their implementations are executed to a result.
+
+A function, `z2y`, can be defined using an expression, `expression`, as `def z2y[Z, Y]: Z => Y = { z => { val y: Y = expression(z) ; y } }`
+
+When *substituting* an argument `a` for parameter `z` of `z2y`, `a` is *bound* to context bound `z` of `expression(z)`, and `expression(a)` is evaluated to a result, say `b`, where `y`, the result of transforming `a` by `z2y` is *initialized* with.
+
+Similarly, program capabilities of binary program type constructors `[Z, Y] =>> Z => C[Y]` can be defined in terms of the computation execution ingredients of unary computations type constructors `[Y] =>> C[Y]`.
+
+In other words `given [C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]]`, which can be read as *if* `C[Y]` *is a computations, then* `Z => C[Y]` *is a program*.
+
+More precisely,
+
+a program, `z2cy`, can be defined using a computation, `computation`, as `def z2cy[Z, Y]: Z => C[Y] = { z => { val cy: C[Y] = computation(z) ; cy } }`
+
+When *substituting* an argument `a` for parameter `z` of `z2cy`, `a` is *bound* to context bound `z` of `computation(z)`, and `computation(a)` is executed to a computation result, say `cb`, where `cy`, the result of transforming `a` by `z2cy` is *initialized* with.
+
+Recall computations are specifications.
+
+A materialized implementation of computation `cy` is then the result of transforming `a` by `z2cy`. 
+
 
 ## Effects
 
-On the one hand, program-level programming is a generalization of *function-level programming*.
+Function capabilities are *pure*, functions *transform arguments* to results*.
 
-Programs are *implemented* as functions.
+Program-level programming, allows for specifying *impure program capabilities* that go beyond *pure function capabilities*. 
 
-An implemented program, *somehow*, *transforms* an *argument* to a *result*. 
-
-On the other hand, program-level programming, allows for specifying *impure program capabilities* that go beyond *pure function capabilities*. 
-
-More precisely, it is possible to `extend` program specification `trait`'s to specify *effects*.
-
-Effects can be *external*, for example, to deal with external *input/output*, or *internal*, for example, to deal with internal *state*.
+More precisely, it is possible to `extend` program specification `trait`'s with `trait`'s that specify *effects*.
 
 ## Main programs
 
 Programs of type `Unit >--> Z` can be combined with programs of type `Z >--> Y` and programs of type `(Z && Y) >--> Unit` to *main programs* of type `Unit >--> Unit`.
 
-The programs of type `Unit >--> Z` resp. `(Z && Y) >--> Unit` make use of specified external input effects resp. specified external input effects.
-
-## Materialization
-
-Implemented main programs are *materialized* to functions.
-
-The types of those functions reflect the specified effects that the programs that are part of the main programs can make use of.
-
-Those implemented program, somehow, *perform* those *effects*.
-
-When performing an effect, typically, a, so called, *side-effect* happens.
-
-Programs can also be implemened for testing purposes.
-
-For testing purposes, typically, *no external side effects happen* because they require user interaction.
+Programs of type `Unit >--> Z` resp. `(Z && Y) >--> Unit` make use of specified input effects resp. specified output effects.
 
 ## Programs and computations revisited
 
-Programs are specified using the *binary type constructor class* `trait Program[>-->[- _, + _]]`.
 
-Computations are specified using the *unnary type constructor class* `trait Computation[C[+ _]]`.
+## Materialization
 
-The *variance annotations*, `-` for *contravariance* resp. `+` for *covariance*, specify the *require less*, for arguments, resp. *provide more*, for results, programming principle.
+Program types are *implemented* as function types.
 
-Functions `f` can be defined using expressions `e(_)` as `def f[Z, Y]: Z => Y = { z => { val y: Y = e(z) ; y } }`
+Implemented main programs are *materialized* to functions.
 
-Similarly, program capabilities of functions of type `Z => C[Y]`, can be defined in terms of the computation capabilities of computations of type `C[Y]`.
+The types of those functions reflect the effects in terms of which the specification of the programs, in term of which the main programs are defined, are declared.
 
-In other words, technically, `given [C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]]`
+Implemented effects can be *external*, for example, dealing with external *input/output*, or *internal*, for example, to dealing with internal *state*.
 
-## Denotational versus operational
 
-It is intructive to think of functions resp. programs are *denotational* artifacts. 
+When *running materialized implemented main program*, side effects happen.
 
-At *development time* they are *definitions* of transformations of an argument to a result resp. *declarations* of transformations of an argument to a result and effects.
 
-It is intructive to think of expressions resp. materialized implemented computations are *operational* artifacts.
+## Side effects
 
-At *runtime* they are evaluated to a result resp. executed to a result, performing side effects along the way.
+An implemented program, *somehow*, *transforms* an *argument*, if any, to a *result*, if any, making use of the defined pure programming capabilities in terms of which its specification is declared, while *performing* the defined effects in terms of which its specification is *declared*. 
 
-## Application developers versus library developers
+A performed defined effect is referred to as a side effect.
 
-The external programming DSL of the `PLP` library is a programming interface for *application* developers.
 
-The internal `private[plp]` computing DSL of the `PLP` library is a programming interface for *library* developers.
+For example, internal side effects, like generating a random number or external side effects like performing input/output.
+
+Note that running a materialized implemented main program that makes use of a program that specifies to internally generate a random number, will always generate the same random number. 
+
+Programs can also be implemened for testing purposes.
+
+For testing purposes, typically, *no external side effects happen* because they require user interaction, before, during or after running materialized implemented main programs.
+
+
 
 ## Remarks
 
