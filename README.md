@@ -1,4 +1,57 @@
-# The essence of programming
+# The essence of function-level programming
+
+## Introduction
+
+**Warning** 
+
+The introduction of this courses is not *sound* and *complete* *at all*.
+
+It tries to set the scene of the course.
+
+The core content of this course *is* sound and complete in as far as it is based upon *specification* and *implementation* `Scala` *code* that is *type correct*.
+
+### Functional programming
+
+Functional programming is about the mutual recursive relation between *functions* and *expressions*.
+
+Expressions are used to define functions with using *abstraction*, abstracting *values* out of expressions.
+
+Functions are used to define expressions with using *application*.
+
+### The essence of functional programming
+
+In 1992, in the *proceedings* of the 19th *Symposium on Principles of programming*, *Philip Wadler* published *The essence of functional programming*.
+
+Expressions are generalized to *computations* to deal with *impure computation execution* ingredients that go beyond the *pure expression evaluation* ingredients.
+
+After all, programming is not only about 
+
+- *internally*, *always*, *succesfully*, *transforming* an *argument* to the *same* *result*
+
+but also about such things as
+
+- *state handling*, to, *internally*, *sometimes*, deal with *random* results,
+- *failure handling*, to, *internally*, *sometimes*, deal with *unsuccessful* results,
+- *input/output*, to, *externally*, deal with *program composition*.
+- ...
+
+### Function-level programming
+
+In 1977, in his *Turing Award* lecture *Can Programming be Liberated from the von Neumann Style?*, *John Backus* described `FP`, a *function-level* programming language.
+
+Function-level programming restricts functional programming to *function-typed* expressions.
+
+In 1977, long before 1992, `FP` did not deal with any impure ingredients at all.
+
+### The essence of function-level programming
+ 
+This course generalizes function-level programming to *program-level* programming.
+
+Functions are generalized to *programs* to deal with impure ingredients.
+
+So how does this course establish this generalization?
+
+Among others by changing from a programming *language* that *does not* allow for *different implementations of its specification* and is *not* *extendible*, to a programming *library* that *does* allow for *different implementations of its specifications* and *is* *extendible*.
 
 ## Problem domains
 
@@ -6,25 +59,25 @@ There are a lot of problem domains we have few knowledge about.
 
 There are also a few problem domains we have lot of knowledge about.
 
-But what is the *essence* of a problem domain?
+But what *is* the *essence* of a problem domain?
 
-## Domain specific language (DSL)
+### Domain specific language (DSL)
 
 Wriring a *domain specific language* library for a specific problem domain is one way to reveal the essence of that problem domain.
 
 Think of writing a domain specific language library as teaching about the essence of a specific problem domain to a *programming language compiler*.
 
-THe library strictly separates *specifications* from *implementations*.
+You cannot fool a compiler!
 
-THe library is written using the `Scala` programming language.
+Ideally, domain specific language libraries strictly separates *specifications* from *implementations*.
 
 ## Specifications
 
-Specifying things is done by *classifying* them in *classes*, also known as *categorizing* them in *categories*.
+Specifying things in `Scala` is done by *classifying* them in *classes*, also known as *categorizing* them in *categories*.
 
 Specifications are `trait`'s.
 
-The library specification `trait`'s declare *higher kinded type classes*, typically *binary type constructor classes* and *unary type constructor classes*.
+We almost exclusively limit ourselves to library specification `trait`'s that declare *higher kinded type classes*, typically *binary type constructor classes* and *unary type constructor classes*.
 
 ## Implementations
 
@@ -38,39 +91,37 @@ The library specification `given`'s define *higher kinded type class instances*,
 
 The *programming problem domain* is a problem domain like any other one, so it makes sense to write a *domain specific language library for programming* in order to reveal the *essence of programming*.
 
-The course documents such a `Scala` library, `PLP`, standing for, *program level programming*.
+The course is based upon a `Scala` library, `PLP`, standing for, *program-level programming*.
 
 ## Programs and computations
 
-The `PLP` library has an *external specification* part with corresponding *external implementations* and an *internal specification* part with corresponding *internal implementations*.
+The `PLP` library has an *external specification* part with corresponding *external implementations*, and an *internal specification* part with corresponding *internal implementations*.
 
-The external specification part is a DSL for programming.
+The external specification part is a *DSL for programming*.
 
 The external specification `trait`'s specify *programs* of type `Z >--> Y` that *generalize functions* of type `Z => Y`.
 
-The internal specification part is a DSL for *computing*.
+The internal specification part is a *DSL for computing*.
 
 The internal specification `trait`'s specify *computations* of type `C[Y]` that *generalize expressions* of type `Y`.
 
 The external programming DSL of the `PLP` library is a programming interface for *application* developers.
 
-The internal `private[plp]` computing DSL of the `PLP` library is a programming interface for *library* developers.
+The internal, `private[plp]`, computing DSL of the `PLP` library is a programming interface for *library* developers.
 
 ## Effects
 
-On the one hand, program level programming is a generalization of *function level programming*.
+On the one hand, program-level programming is a generalization of *function-level programming*.
 
 Programs are *implemented* as functions.
 
-An implemented program, somehow, *transforms* an *argument* to a *result*. 
+An implemented program, *somehow*, *transforms* an *argument* to a *result*. 
 
-On the other hand, program level programming, allows for specifying *impure program capabilities* that go beyond *pure function capabilities*. 
+On the other hand, program-level programming, allows for specifying *impure program capabilities* that go beyond *pure function capabilities*. 
 
 More precisely, it is possible to `extend` program specification `trait`'s to specify *effects*.
 
 Effects can be *external*, for example, to deal with external *input/output*, or *internal*, for example, to deal with internal *state*.
-
-An implemented program, somehow, *performs effects*. 
 
 ## Main programs
 
@@ -84,29 +135,37 @@ Implemented main programs are *materialized* to functions.
 
 The types of those functions reflect the specified effects that the programs that are part of the main programs can make use of.
 
+Those implemented program, somehow, *perform* those *effects*.
+
+When performing an effect, typically, a, so called, *side-effect* happens.
+
+Programs can also be implemened for testing purposes.
+
+For testing purposes, typically, *no external side effects happen* because they require user interaction.
+
 ## Programs and computations revisited
 
 Programs are specified using the *binary type constructor class* `trait Program[>-->[- _, + _]]`.
 
 Computations are specified using the *unnary type constructor class* `trait Computation[C[+ _]]`.
 
-The *variance annotations*, `-` for *contravariance* resp. `+` for *covariance*, specify the *require less* resp. *provide more* programming principle.
+The *variance annotations*, `-` for *contravariance* resp. `+` for *covariance*, specify the *require less*, for arguments, resp. *provide more*, for results, programming principle.
 
-Functions can be defined using expressions as `def f[Z, Y]: Z => Y = { z => { val y: Y = e(z) ; y } }`
+Functions `f` can be defined using expressions `e(_)` as `def f[Z, Y]: Z => Y = { z => { val y: Y = e(z) ; y } }`
 
-Similarly, program capabilities of functions of type `Z => C[Y]`, can be defined in terms of the computation capabilities of `C[Y]`.
+Similarly, program capabilities of functions of type `Z => C[Y]`, can be defined in terms of the computation capabilities of computations of type `C[Y]`.
 
-In other words, if `C[+ _]: Computation` implies `Program[[Z, Y] =>> Z => C[Y]]`
+In other words, technically, `given [C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]]`
 
-## Denotational versus operatioal
+## Denotational versus operational
 
-Functions resp. programs are *denotational* artifacts. 
+It is intructive to think of functions resp. programs are *denotational* artifacts. 
 
-At *development time* they are *definitions* resp. *declarations* of transformations of an argument to a result.
+At *development time* they are *definitions* of transformations of an argument to a result resp. *declarations* of transformations of an argument to a result and effects.
 
-Expressions resp. materialized implemented computations are *operational* artifacts.
+It is intructive to think of expressions resp. materialized implemented computations are *operational* artifacts.
 
-At *runtime* they are *evaluated* resp. *executed* to a *result*.
+At *runtime* they are evaluated to a result resp. executed to a result, performing side effects along the way.
 
 ## Application developers versus library developers
 
@@ -125,37 +184,8 @@ Eventually, `@main` `Scala` code makes use of *materialized implemented main pro
 For example
 
 ```scala
-@main def mainFactorial(args: String*): Unit =
+// ...
 
-  materializedMainFactorial
-```
-
-The example is `@main` runnable code
-
-For example
-
-```scala
-[info] running examples.implementation.active.program.stdOut.writing.stdIn.reading.factorial.mainFactorial 
-Please type an integer
-10
-applying factorial to argument 10 yields result 3628800
-```
-
-Recall that the type for input `Unt >--> Z` resp. the type for output iss `(Z && Y) >--> Unit`. 
-
-for `mainFactorial` `Unit >--> BigInt` resp. `(BigInt && BigInt) >--> Unit`
-
-Not only the result `3628800` of type `BigInt` is written to standard output, but also the argument `10` of type `BigInt` that is read from standard input.
-
-Recall that effects are specified.
-
-The decision of *how* implementations perform  input/output effects is reflected in the `package` name as `active.program.stdOut.writing.stdIn.reading`.
-
-More imporant, the decision is *pushed to the boundaries of the* `@main` *code* by making use of *dependency injection* of `given` implementations *by* `import`.
-
-For example
-
-```scala
 import plp.external.implementation.active.writing.reading.{
   given Program[`=>AWR`[StdOut, BigInt]]
   , given Reading[BigInt, `=>AWR`[StdOut, BigInt]]
@@ -177,11 +207,26 @@ import examples.implementation.stdOut.writing.factorial.{
 import plp.external.implementation.stdOut.{ 
   given Writable[StdOut] 
 }
+
+// ...
+
+@main def mainFactorial(args: String*): Unit =
+
+  materializedMainFactorial
+```
+
+Let's run the `@main` `Scala` code
+
+```scala
+[info] running examples.implementation.active.program.stdOut.writing.stdIn.reading.factorial.mainFactorial 
+Please type an integer
+10
+applying factorial to argument 10 yields result 3628800
 ```
 
 Below is an explanation.
 
-Feel free to completely ignore it.
+Again, feel free to completely ignore it.
 
 ```scala
 import plp.external.implementation.active.writing.reading.{
@@ -195,6 +240,8 @@ import plp.external.implementation.stdOut.{
 ```
 
 Those `given`'s choose for *active programming*, somehow *reading* a *big integer* and somehow making use of *writable standard output*.
+
+The adjective *active* is used as because, later, *reactive programming* will enter the picture as well.
 
 ```scala
 import examples.implementation.stdIn.{
@@ -213,41 +260,28 @@ import plp.external.implementation.active.writing.reading.{
   given Materialization[`=>AWR`[StdOut, BigInt], Unit, BigInt ?=> (StdOut, Unit)]
 }
 ```
-This `given` chooses to *materialize* to a function of type `Unit ?=> (BigInt ?=> (StdOut, Unit))`.
+This `given` chooses to *materialize* the implemented main program to a function of type `Unit ?=> (BigInt ?=> (StdOut, Unit))`.
 
 ```scala
 import examples.implementation.pleaseTypeAnInteger.{
   given Unit
 }
 ```
+
+The important thing to note is that those `given`'s are *pushed to the boundaries of the* `@main` *code* by making use of *dependency injection* of `given` implementations *by* `import`.
+
+This allows for maximum flexibility with minimum complexity. 
+
+
 
 This `given` chooses for writing `Please type an integer` to standard output so we are left with function of type `BigInt ?=> (StdOut, Unit)`.
 
-The `given BigInt` from standard input turns the function into a value of type `(StdOut, Unit)`.
+The `given BigInt` above from standard input turns the function into a value of type `(StdOut, Unit)`.
 
-The `given Writable[StdOut]` then writes the converted big integer argument `10` and big integer result `3628800` to standard output as `applying factorial to argument 10 yields result 3628800`.
+The `given Writable[StdOut]` above then writes the converted big integer argument `10` and big integer result `3628800` to standard output as `applying factorial to argument 10 yields result 3628800`.
 
-We could have replaced
 
-```scala
-import examples.implementation.pleaseTypeAnInteger.{
-  given Unit
-}
-
-import examples.implementation.stdIn.{
-  given BigInt
-}
-
-import examples.implementation.stdOut.writing.factorial.{
-  given ConvertibleToWritable[(BigInt && BigInt), StdOut, ?]
-}
-
-import plp.external.implementation.stdOut.{ 
-  given Writable[StdOut] 
-}
-```
-
-their definitions 
+We could have replaced the `given`s  explicitly by their definitions 
 
 ```scala
 @main def verboseMainFactorial(args: String*): Unit =
@@ -275,7 +309,7 @@ their definitions
   stdOut.effect(())
 ```
 
-Note that reading from standard input resp writing to standard output is done by performing an effect using `stdInBigInt.effect(())` resp. `stdOut.effect(())`.
+Note that reading from standard input resp. writing to standard output is done by performing a specified effect using `stdInBigInt.effect(())` resp. `stdOut.effect(())`.
 
 For those who are curious, `materializedMainFactorial` is defined as follows
 
@@ -340,7 +374,7 @@ It also makes use of
 
 This may not come as a surprise to you.
 
-This corresponds exactly with the function level programming system `FP` of *John Backus*.
+This corresponds exactly with the function-level programming system `FP` of *John Backus*.
 
 What may be surprising is that `factorial` makes use of them at the *specification* level.
 
@@ -946,9 +980,9 @@ def `(y||x)>-->x`[
 
 ```
 
-You may argue that program level programming using auxiliary programs like `` `(z&&y&&x)>-->(y&&x)` `` to explicitly project values out of products is more trouble than it's worth.
+You may argue that program-level programming using auxiliary programs like `` `(z&&y&&x)>-->(y&&x)` `` to explicitly project values out of products is more trouble than it's worth.
 
-Program level programming promotes writing many small programs and combining them using program capabilities to larger composite ones.
+Program-level programming promotes writing many small programs and combining them using program capabilities to larger composite ones.
 
 As such the size of products stays under control.
 
@@ -1268,9 +1302,9 @@ private[plp] trait Binding[C[+ _]]
 
 Thinking of computation execution as expression evaluation this makes sense: simply continue evaluating.
 
-This is a good example of an interesting usage of `identity`, this time at the function level.
+This is a good example of an interesting usage of `identity`, this time at the function-level.
 
-Interesting examples of using `identity` at program level will follow.
+Interesting examples of using `identity` at program-level will follow.
 
 ## Exercise: define `bind` using `join`
 
@@ -1413,7 +1447,7 @@ Specific `given`'s, and generic `givens` that are only `import`ed by type do nee
 
 ## `Transformation`
 
-How do we go from the *pure function level programming world* to the, potentially, *impure program level programing world*.
+How do we go from the *pure function-level programming world* to the, potentially, *impure program-level programing world*.
 
 Specifying capabilities is relatively simple.
 
