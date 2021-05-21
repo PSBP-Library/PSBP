@@ -13,8 +13,7 @@ private[plp] given Computation[Active] with
   private[plp] def `i~>c`: I ~> Active =
     new {
       override private[plp] def apply[Z]: I[Z] => Active[Z] =
-        z =>
-          z
+        identity[Z]
     }
     
   private[plp] def bind[Z, Y](
