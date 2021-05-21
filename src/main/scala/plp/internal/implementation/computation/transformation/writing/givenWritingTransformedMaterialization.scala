@@ -41,11 +41,12 @@ private[plp] given givenWritingTransformedMaterialization[
 
   override val materialize: (Unit `=>C` Unit) => Z ?=> D[(W, Y)] =
     `u=>cu` =>
+      given u: Unit = ()
       bindD(
-        `u=>cu`(())
-        , (w, u) =>
-            val y = materializeF(`i~>d`.apply)
-            `i~>d`((w, y))
+        `u=>cu`
+        , (w, _) =>
+          val y = materializeF(`i~>d`.apply(u))
+          `i~>d`((w, y))
       )
 
 

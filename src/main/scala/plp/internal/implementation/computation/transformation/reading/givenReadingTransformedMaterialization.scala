@@ -38,11 +38,13 @@ private[plp] given givenReadingTransformedMaterialization[
   }
 
   override val materialize: (Unit `=>C` Unit) => Z ?=> (R ?=> D[Y]) =
-    `u=>tu` =>
+    `u=>cu` =>
+      given u: Unit = ()
       bindD(
-        `u=>tu`(())
-        , _ => 
-            val y = materializeF(`i~>d`.apply)
-            `i~>d`(y)
+        `u=>cu`
+        , _ =>
+          val y = materializeF(`i~>d`(u))
+          `i~>d`(y)
       )
+
   

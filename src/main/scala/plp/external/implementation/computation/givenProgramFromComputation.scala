@@ -24,31 +24,47 @@ private[plp] given givenProgramFromComputation[
   // defined
 
   override def identity[Z]: Z `=>C` Z =
-    `i~>c`.apply
+      `i~>c`.apply(summon[Z])
 
   override def andThen[Z, Y, X](
     `z>-->y`: Z `=>C` Y
     , `y>-->x`: => Y `=>C` X): Z `=>C` X =
-    z =>
-      `z>-->y`(z) >= 
-        `y>-->x`      
+      given cy: C[Y] = `z>-->y` 
+      cy >= {
+        y =>
+        given gy: Y = y
+        `y>-->x`
+      }      
 
   override def toProgram[Z, Y]: (Z => Y) => (Z `=>C` Y) = 
     `z=>y` => 
-      z =>
-        `i~>c`(`z=>y`(z))
+      `i~>c`(`z=>y`(summon[Z]))
 
   override def construct[Z, Y, X](
       `z>-->y`: Z `=>C` Y
       , `z>-->x`: => Z `=>C` X): Z `=>C` (Y && X) =
-    z =>
-      `z>-->y`(z) >= { y => 
-        `z>-->x`(z) >= { x =>
-          `i~>c`(y, x)
-        }
+    given cy: C[Y] = `z>-->y`
+    cy >= {
+      y =>
+      given gy: Y = y
+      given cx: C[X] = `z>-->x`
+      cx >= {
+        x =>
+        given gx: X = x
+        `i~>c`(gy, gx)
       }
+    }
 
   override def conditionally[Z, Y, X](
       `y>-->z`: => Y `=>C` Z, 
       `x>-->z`: => X `=>C` Z): (Y || X) `=>C` Z =
-    foldSum(`y>-->z`, `x>-->z`) 
+    foldSum({
+      (y: Y) => 
+        given gy: Y = y
+        `y>-->z`
+    }, {
+      (x: X) =>
+        given gx: X = x 
+        `x>-->z`
+      }
+      )(summon[Y || X]) 

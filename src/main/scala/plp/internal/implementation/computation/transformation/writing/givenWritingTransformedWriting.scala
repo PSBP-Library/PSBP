@@ -27,5 +27,4 @@ private[plp] given givenWritingTransformedWriting[
   }
 
   override def write: W `=>C` Unit =
-    w =>
-      `i~>d`((w, ()))
+    `i~>d`((summon[W], ()))

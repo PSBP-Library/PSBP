@@ -24,5 +24,5 @@ private[plp] given givenReadingTransformedReading[
   }
 
   override def read: Unit `=>C` R =
-    _ =>
+    given u:Unit = ()
       `i~>d`(summon[R])
