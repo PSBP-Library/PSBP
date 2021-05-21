@@ -20,9 +20,9 @@ private[plp] given givenReadingTransformedReading[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    `i?~>c` => `i?~>d`
   }
 
   override def read: Unit `=>C` R =
-    given u:Unit = ()
-      `i~>d`(summon[R])
+    given Unit = ()
+      `i?~>d`.apply // (summon[R])

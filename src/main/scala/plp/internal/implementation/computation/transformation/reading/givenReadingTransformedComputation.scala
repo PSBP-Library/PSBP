@@ -4,7 +4,7 @@ import plp.external.implementation.computation.ProgramFromComputation
 
 import plp.internal.specification.computation.Computation
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 import plp.internal.specification.transformation.Transformation
 
@@ -25,11 +25,12 @@ private[plp] given givenReadingTransformedComputation[
     bind => bindD
   }
 
-  override private[plp] val `d~>c`: D ~> C = 
+  override private[plp] val `d?~>c`: D ?~> C = 
     new {
-      def apply[Z]: D[Z] => C[Z] =
-        dz => 
-          dz
+      def apply[Z]: D[Z] ?=> C[Z] =
+        summon[D[Z]]
+        // dz => 
+          // dz
     }  
 
   override private[plp] def bind[Z, Y](

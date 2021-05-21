@@ -35,18 +35,20 @@ private[plp] given givenWritingTransformedMaterialization[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    `i?~>c` => `i?~>d`
     , bind => bindD 
   }  
 
   override val materialize: (Unit `=>C` Unit) => Z ?=> D[(W, Y)] =
     `u=>cu` =>
-      given u: Unit = ()
+      given Unit = ()
       bindD(
         `u=>cu`
         , (w, _) =>
-          val y = materializeF(`i~>d`.apply(u))
-          `i~>d`((w, y))
+          // val y = materializeF(`i?~>d`.apply(u))
+          val y = materializeF(`i?~>d`.apply)
+          given (W, Y) = (w, y)
+          `i?~>d`.apply // ((w, y))
       )
 
 

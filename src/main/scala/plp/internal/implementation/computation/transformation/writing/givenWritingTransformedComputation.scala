@@ -8,7 +8,7 @@ import plp.external.implementation.computation.ProgramFromComputation
 
 import plp.internal.specification.computation.Computation
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 import plp.internal.specification.transformation.Transformation
 
@@ -26,7 +26,7 @@ private[plp] given givenWritingTransformedComputation[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    `i?~>c` => `i?~>d`
     , bind => bindD
   }
 
@@ -36,10 +36,15 @@ private[plp] given givenWritingTransformedComputation[
     , append
   }  
 
-  override private[plp] val `d~>c`: D ~> C = new {
-    def apply[Z]: D[Z] => C[Z] =
-      dz =>
-        bindD(dz, z => `i~>d`((nothing, z)))
+  override private[plp] val `d?~>c`: D ?~> C = new {
+    def apply[Z]: D[Z] ?=> C[Z] =
+      // dz =>
+        bindD(
+          summon[D[Z]]
+          , z => 
+              given (W && Z) = (nothing, z)
+              `i?~>d`.apply // ((nothing, z))
+        )
   }  
 
   override private[plp] def bind[Z, Y](
@@ -48,5 +53,6 @@ private[plp] given givenWritingTransformedComputation[
   ): C[Y] =
     bindD(cz, (w1, z) =>
       val (w2, y): W && Y = `z=>cy`(z)
-      `i~>d`(append(w1, w2), y)
+      given (W && Y) = (append(w1, w2), y)
+      `i?~>d`.apply
     )

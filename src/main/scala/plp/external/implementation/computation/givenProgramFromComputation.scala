@@ -17,14 +17,14 @@ private[plp] given givenProgramFromComputation[
   
   private val computation = 
     summon[Computation[C]]
-  import computation.`i~>c`
+  import computation.`i?~>c`
 
   private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
 
   // defined
 
   override def identity[Z]: Z `=>C` Z =
-      `i~>c`.apply(summon[Z])
+      `i?~>c`.apply // (summon[Z])
 
   override def andThen[Z, Y, X](
     `z>-->y`: Z `=>C` Y
@@ -38,7 +38,8 @@ private[plp] given givenProgramFromComputation[
 
   override def toProgram[Z, Y]: (Z => Y) => (Z `=>C` Y) = 
     `z=>y` => 
-      `i~>c`(`z=>y`(summon[Z]))
+      given Y = `z=>y`(summon[Z])
+      `i?~>c`.apply // (`z=>y`(summon[Z]))
 
   override def construct[Z, Y, X](
       `z>-->y`: Z `=>C` Y
@@ -46,12 +47,13 @@ private[plp] given givenProgramFromComputation[
     given cy: C[Y] = `z>-->y`
     cy >= {
       y =>
-      given gy: Y = y
-      given cx: C[X] = `z>-->x`
-      cx >= {
+      // given gy: Y = y
+      // given cx: C[X] = `z>-->x`
+      `z>-->x` >= {
         x =>
-        given gx: X = x
-        `i~>c`(gy, gx)
+        // given gx: X = x
+        given (Y, X) = (y, x)
+        `i?~>c`.apply // (gy, gx)
       }
     }
 
