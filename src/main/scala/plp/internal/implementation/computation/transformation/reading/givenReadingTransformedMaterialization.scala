@@ -23,10 +23,10 @@ private[plp] given givenReadingTransformedMaterialization[
 
   private type C[+Z] = ReadingTransformed[R, D][Z]
 
-  private type `=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
-  private type `=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
+  private type `?=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val materialization = summon[Materialization[`=>D`, Z, Y]]
+  private val materialization = summon[Materialization[`?=>D`, Z, Y]]
   import materialization.{ 
     materialize => materializeF 
   }
@@ -37,14 +37,15 @@ private[plp] given givenReadingTransformedMaterialization[
     , bind => bindD 
   }
 
-  override val materialize: (Unit `=>C` Unit) => Z ?=> (R ?=> D[Y]) =
-    `u=>cu` =>
+  override val materialize: (Unit `?=>C` Unit) => Z ?=> (R ?=> D[Y]) =
+    `u?=>cu` =>
       given u: Unit = ()
       bindD(
-        `u=>cu`
+        `u?=>cu`
         , _ =>
-          given Y = materializeF(resultD) // .apply)
-          resultD // .apply // (y)
+          given Y = materializeF(resultD)
+          resultD
       )
+
 
   

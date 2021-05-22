@@ -19,13 +19,13 @@ private[plp] given givenWritingTransformedWriting[
 
   private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
     result => resultD
   }
 
-  override def write: W `=>C` Unit =
+  override def write: W `?=>C` Unit =
     given (W, Unit) = (summon[W], ())
-    resultD // .apply // ((summon[W], ()))
+    resultD

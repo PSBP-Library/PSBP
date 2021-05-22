@@ -16,13 +16,13 @@ private[plp] given givenReadingTransformedReading[
 
   private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
     result => resultD
   }
 
-  override def read: Unit `=>C` R =
+  override def read: Unit `?=>C` R =
     given Unit = ()
-      resultD // .apply
+    resultD

@@ -18,8 +18,6 @@ private[plp] given givenReadingTransformedComputation[
 
   private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
-
   private val computation = summon[Computation[D]]
   import computation.{ 
     bind => bindD

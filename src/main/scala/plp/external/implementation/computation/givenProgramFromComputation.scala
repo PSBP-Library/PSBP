@@ -9,6 +9,8 @@ import plp.external.specification.function.foldSum
 
 import plp.external.specification.program.Program
 
+import plp.external.implementation.toFunction
+
 import plp.internal.specification.computation.Computation
 
 private[plp] given givenProgramFromComputation[
@@ -24,16 +26,12 @@ private[plp] given givenProgramFromComputation[
   // defined
 
   override def identity[Z]: Z `=>C` Z =
-    result // .apply
-
+    result
+  
   override def andThen[Z, Y, X](
     `z>-->y`: Z `=>C` Y
     , `y>-->x`: => Y `=>C` X): Z `=>C` X =
-      `z>-->y` >= {
-        y =>
-          given Y = y
-          `y>-->x`
-      }      
+      `z>-->y` >= toFunction(`y>-->x`)  
 
   override def toProgram[Z, Y]: (Z => Y) => (Z `=>C` Y) = 
     `z=>y` => 
@@ -55,13 +53,5 @@ private[plp] given givenProgramFromComputation[
   override def conditionally[Z, Y, X](
       `y>-->z`: => Y `=>C` Z, 
       `x>-->z`: => X `=>C` Z): (Y || X) `=>C` Z =
-    foldSum({
-      (y: Y) => 
-        given Y = y
-        `y>-->z`
-    }, {
-      (x: X) =>
-        given X = x 
-        `x>-->z`
-      }
-    )(summon[Y || X]) 
+    foldSum(toFunction(`y>-->z`), toFunction(`x>-->z`))(summon[Y || X]) 
+    

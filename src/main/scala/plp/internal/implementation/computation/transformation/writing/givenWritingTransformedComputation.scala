@@ -22,7 +22,7 @@ private[plp] given givenWritingTransformedComputation[
 
   private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
@@ -42,7 +42,7 @@ private[plp] given givenWritingTransformedComputation[
         summon[D[Z]]
         , z => 
             given (W && Z) = (nothing, z)
-            resultD // .apply
+            resultD
       )
   }  
 
@@ -53,5 +53,5 @@ private[plp] given givenWritingTransformedComputation[
     bindD(cz, (w1, z) =>
       val (w2, y): W && Y = `z=>cy`(z)
       given (W && Y) = (append(w1, w2), y)
-      resultD // .apply
+      resultD
     )

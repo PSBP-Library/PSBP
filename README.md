@@ -8,61 +8,53 @@ First of all, the course is illustrated with code, more precisely `Scala` code, 
 
 When dealing with code related concepts `Scala 3` is *implicit*, in other words, it is not explicitely mentioned any more.
 
-**Warning** 
-
-The introduction of this courses is not *sound* *at all*.
-
-The core content of this course *is* sound in as far as the code that illustrates it is *type correct*.
-
 ## Problem domains
 
 There are a lot of problem domains we have few knowledge about.
 
 There are also a few problem domains we have lot of knowledge about.
 
-But what *is* the *essence* of a problem domain?
+But what is the *essence* of a problem domain?
 
-## Domain specific language (DSL) library
+## Domain specific language library (DSL) 
 
-Writing a *domain specific language* library for a specific problem domain is one way to reveal the essence of that problem domain.
+Writing a *domain specific language* library, in what folllows simply referred to as a DSL, for a specific problem domain is one way to reveal the essence of that problem domain.
 
-Think of writing a domain specific language library as teaching about the essence of a specific problem domain to a *programming language compiler*.
-
-You cannot fool a compiler!
+Think of writing a DSL as teaching the essence of a problem domain to a *programming language compiler*.
 
 ## Specifications and implementations
 
-Ideally libraries strictly separates *specifications* from *implementations*.
+Ideally libraries strictly separate *specifications* from *implementations*.
 
 ## Specifications
 
-Specifying things in `Scala` is done by *classifying* them in *classes*, also known as *categorizing* them in *categories*.
+Specifying things is done by *classifying* them in *classes*, also known as *categorizing* them in *categories*.
 
-Specifications are `trait`'s.
-
-We almost exclusively limit ourselves to library specification `trait`'s that *declare* *higher kinded type classes*, typically *binary type constructor classes* and *unary type constructor classes*.
+We almost exclusively limit ourselves to specification `trait`'s that *declare* *higher kinded type* classes, typically *binary type constructor* classes and *unary type constructor* classes.
 
 ## Implementations
 
-Implementing a specified class is done by *giving* a *class instance*.
+Implementing a specified class is done by giving a class *instance*.
 
-Implementations are `given`'s.
-
-The library specification `given`'s *define* *higher kinded type class instances*, typically *binary type constructor class instances* and *unary type constructor class instances*.
+We almost exclusively limit ourselves to implementation `given`'s that *define* higher kinded type class instances, typically binary type constructor class instances and unary type constructor class instances.
 
 ## Programming problem domain
 
-The *programming problem domain* is a problem domain like any other one, so it makes sense to write a *domain specific language library for programming* in order to reveal the *essence of programming*.
+The *programming problem domain* is a problem domain like any other one, so it makes sense to write a *DSL for programming* in order to reveal the *essence of programming*.
 
-The course is based upon a `Scala` library, `PLP`, standing for, *program-level programming*.
+The course is based upon such a DSL, called `PLP`, standing for, *program-level programming*.
 
 ## Functional programming
 
 Functional programming is about the mutual recursive relation between *functions* and *expressions*.
 
-Functions can be defined in terms of expressions using *abstractions* obtaining functions with *function parameters* corresponding to *expression context bounds* of *expression templates*.
+A function can be defined in terms of an expression using *abstraction*.
 
-Expressions can be defined in terms of functions using *application* obtaining expressions by substituting argument expressions for function parameters and corresponding expression context bounds of expression templates.
+The obtained function has a *function parameter* corresponding to the *unbound name* of the expression.
+
+An expression can be defined in terms of a function using *application*.
+
+An expression is obtained by *binding* a *function argument expression* to the function parameter.
 
 ## The essence of functional programming
 
@@ -144,44 +136,103 @@ The *variance annotations*, `-` for *contravariance* resp. `+` for *covariance*,
 
 ## Programs and computations
 
-*Programs* of type `Z >--> Y` are defined in terms of program capabilities.
+Objects of type `Z >--> Y, defined in terms of program capabilities, are, somewhat abusively, referred to as *programs*.
 
 They are *specifications of generalizations of functions* of type `Z => Y`.
 
 The external programming DSL of the `PLP` library is a programming interface for *application* developers.
 
-It is intructive to think of functions resp. programs are *denotational* artifacts. 
-
-At *development time* they are *definitions of function capabilities* resp. *declarations of program capabilities*.
-
-*Computations* of type `C[Y]` are defined in terms of computation execution ingredients.
+Objects of type `C[Y]`, defined in terms of computation execution ingredients, are, somewhat abusively, referred to as *computations*. 
 
 They are *specifications of generalizations of expressions* of type `Y`.
 
 The internal, `private[plp]`, computing DSL of the `PLP` library is a programming interface for *library* developers.
 
-It is intructive to think of expressions resp. computations are *operational* artifacts.
+## Context
 
-At *runtime* they are evaluated  to a result resp. their implementations are executed to a result.
+A function, `` `z=>y` ``, can be defined using an expression, `e`, as follows
 
-A function, `z2y`, can be defined using an expression, `expression`, as `def z2y[Z, Y]: Z => Y = { z => { val y: Y = expression(z) ; y } }`
+```scala
+def e[Z, Y](z: Z): Y = ???
 
-When *substituting* an argument `a` for parameter `z` of `z2y`, `a` is *bound* to context bound `z` of `expression(z)`, and `expression(a)` is evaluated to a result, say `b`, where `y`, the result of transforming `a` by `z2y` is *initialized* with.
+def `z=>y`[Z, Y]: Z => Y = z => e(z)
+```
 
-Similarly, program capabilities of binary program type constructors `[Z, Y] =>> Z => C[Y]` can be defined in terms of the computation execution ingredients of unary computations type constructors `[Y] =>> C[Y]`.
+You can also make this explicit by using a *context function* of type `Z ?=> Y`.
 
-In other words `given [C[+ _]: Computation]: Program[[Z, Y] =>> Z => C[Y]]`, which can be read as *if* `C[Y]` *is a computations, then* `Z => C[Y]` *is a program*.
+```scala
+def e[Z, Y](z: Z): Y = ???
 
-More precisely,
+def `z?=>y`[Z, Y]: Z ?=> Y = ((z: Z) => e(z))(summon[Z])
+```
 
-a program, `z2cy`, can be defined using a computation, `computation`, as `def z2cy[Z, Y]: Z => C[Y] = { z => { val cy: C[Y] = computation(z) ; cy } }`
+You can use `` `z?=>y` `` as an expression of type `Y`.
 
-When *substituting* an argument `a` for parameter `z` of `z2cy`, `a` is *bound* to context bound `z` of `computation(z)`, and `computation(a)` is executed to a computation result, say `cb`, where `cy`, the result of transforming `a` by `z2cy` is *initialized* with.
+```scala
+  def `z?=>y`[Z, Y]: Z ?=> Y = ??? 
 
-Recall computations are specifications.
+  def y[Y]: Y = `z?=>y`
+```
 
-A materialized implementation of computation `cy` is then the result of transforming `a` by `z2cy`. 
+You can use `y` as an expression of type `Z ?=> Y`.
 
+```scala
+  def y[Y]: Y = ???
+
+  def `z?=>y`[Z, Y]: Z ?=> Y = y
+```
+
+## Denotational (context) functions and operational expressions
+
+It is intructive to think of a function resp. context function as a *denotational* artifact.
+
+At *development time* it is a *definition* of how to *tranform* an *argument* resp. `given` to a *result*.
+
+It is intructive to think of an expression as an *operational* artifact.
+
+At runtime an expression is *evaluated* to a *result*.
+
+You can think a function `` `z=>y` `` of type `Z => Y`, resp. context function `` `z?=>y` `` of type `Z ?=> Y`, as an *expression template* or *expression context*, an expression with a *hole* of type `Z` in it.
+
+If an argument `z` of type `Z` resp. a `given` `z` of type `Z` is given for the hole of type `Z` in the expression context, then the expression context becomes an expression.
+
+The result of evaluating that expression at runtime is the result of transforming argument `z`, resp `given` `z` using `` `z?=>y` ``, resp.  `` `z?=>y` ``.
+
+## Programs and computations revisited
+
+Recall that programs are specifications of generalizations of functions.
+
+Recall that computations are specifications of generalizations of expressions.
+
+Also recall that you can think of a context function as an expression context.
+
+Program capabilities of binary program type constructors `[Z, Y] =>> Z ?=> C[Y]` can be defined in terms of the declared computation execution ingredients of unary computations type constructors `[Y] =>> C[Y]`.
+
+In other words `given [C[+ _]: Computation]: Program[[Z, Y] =>> Z ?=> C[Y]]`, which can be read as *if* `C[Y]` *is a computations, then* `Z ?=> C[Y]` *is a program*.
+
+## Denotational programs and operational computations
+
+It is intructive to think of a program as a *denotational* artifact.
+
+At *development time* it is a *declaration* of, among others, how to *tranform* a `given` to a *result*.
+
+It is intructive to think of an computations as an *operational* artifact.
+
+At runtime a computation is *executed* to a *result*.
+
+You can think a program `` `z?=>cy` `` of type `Z ?=> C[Y]` as an *computation template* or *computation context*, an expression with a *hole* of type `Z` in it.
+
+If a `given` `z` of type `Z` is given for the hole of type `Z` in the computation context, then the computation context becomes a computation.
+
+The result of executing that computation at runtime is also referred to as the result of *running* program `` `z?=>cy` ``, given `z`.
+
+## A teaser
+
+How do we transform the world of expressions of type `Z` to the world of computations of type `C[Z]`?
+
+How do programs of type `Z ?=> C[Y]` and of type  `Y ?=> C[Z]` compose?
+
+It is not possible to give a result of type `C[Y]` as a `given` `y` of type `Y`.
 
 ## Effects
 
@@ -197,29 +248,23 @@ Programs of type `Unit >--> Z` can be combined with programs of type `Z >--> Y` 
 
 Programs of type `Unit >--> Z` resp. `(Z && Y) >--> Unit` make use of specified input effects resp. specified output effects.
 
-## Programs and computations revisited
-
-
 ## Materialization
 
 Program types are *implemented* as function types.
 
 Implemented main programs are *materialized* to functions.
 
-The types of those functions reflect the effects in terms of which the specification of the programs, in term of which the main programs are defined, are declared.
+The types of those functions reflect the declared effects in terms of which the main programs and the programs in terms of which they are defined, are defined.
 
 Implemented effects can be *external*, for example, dealing with external *input/output*, or *internal*, for example, to dealing with internal *state*.
 
+## Side effects
 
 When *running materialized implemented main program*, side effects happen.
-
-
-## Side effects
 
 An implemented program, *somehow*, *transforms* an *argument*, if any, to a *result*, if any, making use of the defined pure programming capabilities in terms of which its specification is declared, while *performing* the defined effects in terms of which its specification is *declared*. 
 
 A performed defined effect is referred to as a side effect.
-
 
 For example, internal side effects, like generating a random number or external side effects like performing input/output.
 
@@ -228,8 +273,6 @@ Note that running a materialized implemented main program that makes use of a pr
 Programs can also be implemened for testing purposes.
 
 For testing purposes, typically, *no external side effects happen* because they require user interaction, before, during or after running materialized implemented main programs.
-
-
 
 ## Remarks
 
@@ -1249,34 +1292,35 @@ private[psbp] trait Computation[C[+ _]]
 
 `Computation` simply combines `Resulting` and `Binding`.
 
-## `NaturalTransformation`
+## `ContextNaturalTransformation`
 
 Computations are specified using a unary type constructor `C[+ _]` that is covariant in its type argument.
 
-*Natural transformations* are like functions, but they act at, *generically*, the unary type constructor level instead of at the type level.
+*Context natural transformations* are like context functions, but they act at, *generically*, the unary type constructor level instead of at the type level.
 
 ```scala
-package plp.internal.specification.naturalTransformation
+package plp.internal.specification.contextNaturalTransformation
 
-private[plp] trait ~>[-F[+ _], +G[+ _]]:
+private[plp] trait ?~>[-F[+ _], +G[+ _]]:
 
   // declared
 
-  private[plp] def apply[Z]: F[Z] => G[Z]
+  private[plp] def apply[Z]: F[Z] ?=> G[Z]
 
-extension [F[+ _], G[+ _], H[+ _]] (`f~>g`: F ~> G) 
-  private[plp] def ~>(`g~>h`: => G ~> H): F ~> H =
+extension [F[+ _], G[+ _], H[+ _]] (`f?~>g`: F ?~> G) 
+  private[plp] def ?~>(`g?~>h`: => G ?~> H): F ?~> H =
     new {
-      override private[plp] def apply[Z]: F[Z] => H[Z] =
-        `f~>g`.apply andThen `g~>h`.apply
+      override private[plp] def apply[Z]: F[Z] ?=> H[Z] =
+        given G[Z] = `f?~>g`.apply
+        `g?~>h`.apply
     }
 ```
 
 Using `apply`, natural transformations can be *applied* in the same way as functions.
 
-Using `~>`, natural transformations can be *composed* in a similar way as functions.
+Using `?~>`, natural transformations can be *composed* in a similar way as functions.
 
-The infix `extension` `~>` is not part of the `~>` `trait`.
+Note that the infix `extension` `?~>` is not part of the `~>` `trait`.
 
 We are not specifying a higher kinded type class here.
 
@@ -1285,18 +1329,21 @@ We are not specifying a higher kinded type class here.
 ```scala
 package plp.internal.specification.resulting
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 private[plp] trait Resulting[C[+ _]]:
 
   private[plp] type I[+Z] = Z
 
-  private[plp] def `i~>c`: I ~> C
+  private[plp] def `i?~>c`: I ?~> C
+
+  private[plp] def result[Z]: I[Z] ?=> C[Z] =
+    `i?~>c`.apply
 ```
 
-`Resulting` specifies, using `i~>c`, that a value can, naturally, be transformed to a *pure computation* that does nothing.
+`Resulting` specifies, using `` `i?~>c` ``, that an expression can, naturally, be transformed to a *pure computation* that, when executed, evaluates the expression.
 
-The *result* of executing that computation is equal to that value.
+This is the way to, naturally, transform from the world of expressions to the world of computations.
 
 Think of that trivial pure computation as an expression.
 
@@ -1305,20 +1352,23 @@ Think of that trivial pure computation as an expression.
 ```scala
 package plp.internal.specification.joining
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 private[plp] trait Joining[C[+ _]]:
         
   private[plp] type CC[+Z] = C[C[Z]]
 
-  private[plp] def join[Z]: CC ~> C
+  private[plp] def `cc?~>c`: CC ?~> C
+
+  private[plp] def join[Z]: CC[Z] ?=> C[Z] =
+    `cc?~>c`.apply
 ```
 
-`Joining` specifies, using `join`, that a *nested computation* can, naturally, be transformed to a computation.
+`Joining` specifies, using `` `cc?~>c` ``, that a *nested computation* can, naturally, be transformed to a computation.
 
-The result of executing an *inner computation* is naturally used by an *outer computation* to continue execution with. 
+The result of executing an *inner computation* is, trivially, used by an *outer computation* to continue execution with. 
 
-Think of joining nested computation execution as nested expression evaluation.
+Think of nested computation execution as nested expression evaluation.
 
 ## `Binding`
 
@@ -1329,7 +1379,7 @@ import plp.internal.specification.resulting.Resulting
 
 import plp.internal.specification.joining.Joining
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 private[plp] trait Binding[C[+ _]]
   extends Joining[C]:
@@ -1347,20 +1397,23 @@ private[plp] trait Binding[C[+ _]]
     private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
       bind(cz, `z=>cy`)
         
-  private[plp] def join[Z]: CC ~> C =
+  override private[plp] def `cc?~>c`: CC ?~> C =
     new {
-      override private[plp] def apply[Z]: CC[Z] => C[Z] =
-        _ >= identity
+      override private[plp] def apply[Z]: CC[Z] ?=> C[Z] =
+        summon[CC[Z]] >= 
+          identity
     }
 ```
 
-`Binding` specifies, using `bind`, that the result of executing an inner computation can be *bound* to a *continuation* that turns it into an outer computation to continue execution with. 
+`Binding` specifies, using `bind`, that (the result of executing) an inner computation can be *bound* to a *continuation* that turns it into an outer computation to continue execution with. 
 
-`join` can be defined in terms of `bind` by simply using the `identity` continuation.
+`` `cc?~>c` `` can be defined in terms of `>=` by simply using the `identity` continuation.
 
-Thinking of computation execution as expression evaluation this makes sense: simply continue evaluating.
+Thinking of computation execution as expression evaluation this makes sense.
 
-This is a good example of an interesting usage of `identity`, this time at the function-level.
+The continuation simply continues evaluating.
+
+This is a good example of an interesting usage of `identity`, this time `identity` at the function-level.
 
 Interesting examples of using `identity` at program-level will follow.
 
@@ -1379,26 +1432,28 @@ package plp.exercises
 
 import plp.internal.specification.joining.Joining
 
-private[plp] trait Lifting[C[+ _]]:
+private[plp] trait FunctionLifting[C[+ _]]:
 
   private[plp] def lift[Z, Y]: (Z => Y) => (C[Z] => C[Y])
 
 private[plp] def bindUsingJoin[
   Z, Y
   , C[+ _]: Joining
-          : Lifting
+          : FunctionLifting
 ] (
   cz: C[Z]
   , `z=>cy`: => Z => C[Y]
 ): C[Y] =
   
   val joining: Joining[C] = summon[Joining[C]]
-  import joining.join
+  import joining.join // `cc?~>c`
 
-  val lifting: Lifting[C] = summon[Lifting[C]]
+  val lifting: FunctionLifting[C] = summon[FunctionLifting[C]]
   import lifting.lift
 
-  join(lift(`z=>cy`)(cz))
+  given C[C[Y]] = lift(`z=>cy`)(cz)
+
+  join
 ```
 
 The extra computation capability  is `FunctionLifting`, the capability to *lift functions* from the value level to the computation level. 
@@ -1412,7 +1467,7 @@ We are now ready for a very important `given`, or *constructive categorization p
 ```scala
 package plp.external.implementation.computation
 
-private[psbp] type ProgramFromComputation[C[+ _]] = [Z, Y] =>> Z => C[Y]
+private[psbp] type ProgramFromComputation[C[+ _]] = [Z, Y] =>> Z ?=> C[Y]
 ```
 
 `ProgramFromComputation` is a just convenient type synonym.
@@ -1450,6 +1505,8 @@ import plp.external.specification.function.foldSum
 
 import plp.external.specification.program.Program
 
+import plp.external.implementation.toFunction
+
 import plp.internal.specification.computation.Computation
 
 private[plp] given givenProgramFromComputation[
@@ -1458,41 +1515,52 @@ private[plp] given givenProgramFromComputation[
   
   private val computation = 
     summon[Computation[C]]
-  import computation.`i~>c`
+  import computation.result
 
   private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
 
   // defined
 
   override def identity[Z]: Z `=>C` Z =
-    `i~>c`.apply
-
+    result
+  
   override def andThen[Z, Y, X](
     `z>-->y`: Z `=>C` Y
     , `y>-->x`: => Y `=>C` X): Z `=>C` X =
-    z =>
-      `z>-->y`(z) >= 
-        `y>-->x`      
+      `z>-->y` >= toFunction(`y>-->x`)  
 
   override def toProgram[Z, Y]: (Z => Y) => (Z `=>C` Y) = 
     `z=>y` => 
-      z =>
-        `i~>c`(`z=>y`(z))
+      given Y = `z=>y`(summon[Z])
+      identity
 
   override def construct[Z, Y, X](
       `z>-->y`: Z `=>C` Y
       , `z>-->x`: => Z `=>C` X): Z `=>C` (Y && X) =
-    z =>
-      `z>-->y`(z) >= { y => 
-        `z>-->x`(z) >= { x =>
-          `i~>c`(y, x)
-        }
+    `z>-->y` >= {
+      y =>
+      `z>-->x` >= {
+        x =>
+          given (Y, X) = (y, x)
+          identity
       }
+    }
 
   override def conditionally[Z, Y, X](
       `y>-->z`: => Y `=>C` Z, 
       `x>-->z`: => X `=>C` Z): (Y || X) `=>C` Z =
-    foldSum(`y>-->z`, `x>-->z`) 
+    foldSum(toFunction(`y>-->z`), toFunction(`x>-->z`))(summon[Y || X]) 
+```
+
+where
+
+```scala
+package plp.external.implementation
+
+private[plp] def toFunction[Z, Y](`z?=>y`: Z ?=> Y): Z => Y =
+  z =>
+    given Z = z
+    `z?=>y`
 ```
 
 Just like *functions can be defined in terms of expressions*, *programming capabilities* can be defined in terms of *computing capabilities*.
@@ -1502,7 +1570,7 @@ Note that the `given` has name `givenProgramFromComputation`.
 `givenProgramFromComputation` is a generic `given` that is used to define *specific* `given`'s where it is `import`ed by *name*.
 
 Specific `given`'s, and generic `givens` that are only `import`ed by type do need to have a name.
-
+`
 ## `Transformation`
 
 How do we go from the *pure function-level programming world* to the, potentially, *impure program-level programing world*.
@@ -1513,7 +1581,7 @@ Just declare a capability with an appropriate type.
 
 In fact, that is what already has been done for `Reading` resp. `Writing` using `read` resp. `write`.
 
-Implemanting those capabilities is where *transformations* are used.
+Implementing those capabilities is where *transformations* are used.
 
 Transformations of a computation type `[Y] =>> C[Y]` *enrich* the corresponding program type `[Z, Y] =>> ProgramFromComputation[C][Z, Y]` with implementations of extra, eventually potenially impure program capabilities. 
 
@@ -1522,7 +1590,7 @@ package plp.internal.specification.transformation
 
 import plp.internal.specification.resulting.Resulting
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
   
 private[plp] trait Transformation[
   D[+ _]: Resulting 
@@ -1531,24 +1599,24 @@ private[plp] trait Transformation[
 
   // declared
 
-  private[plp] val `d~>c`: D ~> C
+  private[plp] val `d?~>c`: D ?~> C
 
   // defined
 
-  override private[plp] def `i~>c`: I ~> C = 
+  override private[plp] def `i?~>c`: I ?~> C = 
 
     val resulting = 
       summon[Resulting[D]]
     import resulting.{
-      `i~>c` => `i~>d`
+      `i?~>c` => `i?~>d`
     }
 
-    `i~>d` ~> `d~>c`
+    `i?~>d` ?~> `d?~>c`
 ```
 
-A *computation transformation* uses a natural transformation `d~>c` of type `D ~> C` to naturally define `i~>c` for `C` as a composition of `i~>d` for `D` and `d~>c`.
+A *transformation* uses a context natural transformation `d?~>c` of type `D ?~> C` to naturally define `i?~>c` for `C` as a composition of `i?~>d` for `D` and `d?~>c`.
 
-Note the, hopefully, suggestive usage of typeful names, this time for natural transformations.
+Note the, hopefully, suggestive usage of typeful names, this time for context natural transformations.
 
 ## `ReadingTransformed`
 
@@ -1586,19 +1654,19 @@ private[plp] given givenReadingTransformedReading[
 
   private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    result => resultD
   }
 
-  override def read: Unit `=>C` R =
-    _ =>
-      `i~>d`(summon[R])
+  override def read: Unit `?=>C` R =
+    given Unit = ()
+    resultD
 ```
 
-Defining `read` for `` `=>C` `` uses `summon[R]`, the to be `given` argument of type `R`, and transforms it to a computation using `` `i~>d` `` of `D`.
+Defining `read` for `` `=>C` `` uses `()` as a `given` of type `Unit` for `resultD`.
 
 Note that the `given` has name `givenReadingTransformedReading`.
 
@@ -1613,7 +1681,7 @@ import plp.external.implementation.computation.ProgramFromComputation
 
 import plp.internal.specification.computation.Computation
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 import plp.internal.specification.transformation.Transformation
 
@@ -1627,18 +1695,15 @@ private[plp] given givenReadingTransformedComputation[
 
   private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
-
   private val computation = summon[Computation[D]]
   import computation.{ 
     bind => bindD
   }
 
-  override private[plp] val `d~>c`: D ~> C = 
+  override private[plp] val `d?~>c`: D ?~> C = 
     new {
-      def apply[Z]: D[Z] => C[Z] =
-        dz => 
-          dz
+      def apply[Z]: D[Z] ?=> C[Z] =
+        summon[D[Z]]
     }  
 
   override private[plp] def bind[Z, Y](
@@ -1648,7 +1713,7 @@ private[plp] given givenReadingTransformedComputation[
     bindD(cz, z => `z=>cy`(z))
 ```
 
-When defining `d~>c` and `bind`, the type system can take the to be `given` argument of type `R` into account to check type correctness.
+When defining `d?~>c` and `bind`, the type system can take the to be `given` argument of type `R` into account to check type correctness.
 
 Note that the `given` has name `givenReadingTransformedComputation`.
 
@@ -1682,33 +1747,34 @@ private[plp] given givenReadingTransformedMaterialization[
 
   private type C[+Z] = ReadingTransformed[R, D][Z]
 
-  private type `=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
-  private type `=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
+  private type `?=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val materialization = summon[Materialization[`=>D`, Z, Y]]
+  private val materialization = summon[Materialization[`?=>D`, Z, Y]]
   import materialization.{ 
     materialize => materializeF 
   }
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    result => resultD
     , bind => bindD 
   }
 
-  override val materialize: (Unit `=>C` Unit) => Z ?=> (R ?=> D[Y]) =
-    `u=>tu` =>
+  override val materialize: (Unit `?=>C` Unit) => Z ?=> (R ?=> D[Y]) =
+    `u?=>cu` =>
+      given u: Unit = ()
       bindD(
-        `u=>tu`(())
-        , _ => 
-            val y = materializeF(`i~>d`.apply)
-            `i~>d`(y)
+        `u?=>cu`
+        , _ =>
+          given Y = materializeF(resultD)
+          resultD
       )
 ```
 
-Defining `materialize` for `` `=>C` `` in terms of `materialize` of `` `=>D` `` is a bit more complex.
+Defining `materialize` for `` `?=>C` `` in terms of `materialize` of `` `?=>D` `` is a bit more complex.
 
-Defining a local value `y`, which the type system infers to have type `Y`, is not necessary but is instructive.
+Defining a local `given Y` for `resultD` does the trick.
 
 Note that the `given` has name `givenReadingTransformedMaterialization`.
 
@@ -1753,19 +1819,19 @@ private[plp] given givenWritingTransformedWriting[
 
   private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    result => resultD
   }
 
-  override def write: W `=>C` Unit =
-    w =>
-      `i~>d`((w, ()))
+  override def write: W `?=>C` Unit =
+    given (W, Unit) = (summon[W], ())
+    resultD
 ```
 
-Defining `write` for `` `=>C` `` tuples `w` with `()` to `(w, ())`, and turns it into a computation using `` `i~>d` `` of `D`.
+Defining `write` for `` `?=>C` `` tuples `summon[W]` to define a `given (W, Unit)` for `resultD`.
 
 Note that the `given` has name `givenWritingTransformedWriting`.
 
@@ -1784,7 +1850,7 @@ import plp.external.implementation.computation.ProgramFromComputation
 
 import plp.internal.specification.computation.Computation
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 import plp.internal.specification.transformation.Transformation
 
@@ -1798,11 +1864,11 @@ private[plp] given givenWritingTransformedComputation[
 
   private type C[+Y] = WritingTransformed[W, D][Y]
 
-  private type `=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    result => resultD
     , bind => bindD
   }
 
@@ -1812,10 +1878,14 @@ private[plp] given givenWritingTransformedComputation[
     , append
   }  
 
-  override private[plp] val `d~>c`: D ~> C = new {
-    def apply[Z]: D[Z] => C[Z] =
-      dz =>
-        bindD(dz, z => `i~>d`((nothing, z)))
+  override private[plp] val `d?~>c`: D ?~> C = new {
+    def apply[Z]: D[Z] ?=> C[Z] =
+      bindD(
+        summon[D[Z]]
+        , z => 
+            given (W && Z) = (nothing, z)
+            resultD
+      )
   }  
 
   override private[plp] def bind[Z, Y](
@@ -1824,7 +1894,8 @@ private[plp] given givenWritingTransformedComputation[
   ): C[Y] =
     bindD(cz, (w1, z) =>
       val (w2, y): W && Y = `z=>cy`(z)
-      `i~>d`(append(w1, w2), y)
+      given (W && Y) = (append(w1, w2), y)
+      resultD
     )
 ```
 
@@ -1866,33 +1937,35 @@ private[plp] given givenWritingTransformedMaterialization[
 
   private type C[+Z] = WritingTransformed[W, D][Z]
 
-  private type `=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
-  private type `=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
+  private type `?=>D`= [Z, Y] =>> ProgramFromComputation[D][Z, Y]
+  private type `?=>C`= [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val Materialization = summon[Materialization[`=>D`, Z, Y]]
+  private val Materialization = summon[Materialization[`?=>D`, Z, Y]]
   import Materialization.{ 
     materialize => materializeF 
   }
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i~>c` => `i~>d`
+    result => resultD
     , bind => bindD 
   }  
 
-  override val materialize: (Unit `=>C` Unit) => Z ?=> D[(W, Y)] =
+  override val materialize: (Unit `?=>C` Unit) => Z ?=> D[(W, Y)] =
     `u=>cu` =>
+      given Unit = ()
       bindD(
-        `u=>cu`(())
-        , (w, u) =>
-            val y = materializeF(`i~>d`.apply)
-            `i~>d`((w, y))
+        `u=>cu`
+        , (w, _) =>
+          val y = materializeF(resultD)
+          given (W, Y) = (w, y)
+          resultD
       )
 ```
 
-Again, defining `materialize` for `` `=>C` `` in terms of `materialize` of `` `=>D` `` is a bit more complex.
+Again, defining `materialize` for `` `?=>C` `` in terms of `materialize` of `` `?=>D` `` is a bit more complex.
 
-Again, defining a local value `y`, which the type system infers to have type `Y`, is not necessary but is instructive.
+Again, defining a local `given (W, Y)` for `resultD` does the trick.
 
 Note that the `given` has name `givenWritingTransformedMaterialization`.
 
@@ -1923,7 +1996,8 @@ import plp.internal.implementation.computation.transformation.reading.ReadingTra
 private[plp] given givenReadingTransformedWriting[
   R
   , W: Writable
-  , D[+ _]: [D[+ _]] =>> Writing[W, ProgramFromComputation[D]]
+     : [W] =>> Writing[W, ProgramFromComputation[D]]
+  , D[+ _]
 ]: Writing[
   W
   , ProgramFromComputation[ReadingTransformed[R, D]]
@@ -1931,20 +2005,19 @@ private[plp] given givenReadingTransformedWriting[
 
   private type C[+Y] = ReadingTransformed[R, D][Y]
 
-  private type `=>D` = [Z, Y] =>> Z => D[Y]
-  private type `=>C` = [Z, Y] =>> Z => C[Y]
+  private type `?=>D` = [Z, Y] =>> ProgramFromComputation[D][Z, Y]
+  private type `?=>C` = [Z, Y] =>> ProgramFromComputation[C][Z, Y]
 
-  private val writing = summon[Writing[W, `=>D`]]
+  private val writing: Writing[W, `?=>D`] = summon[Writing[W, `?=>D`]]
   import writing.{
     write => writeF
   }
 
-  override def write: W `=>C` Unit =
-    w =>
-      writeF(w)
+  override def write: W `?=>C` Unit =
+    writeF
 ```
 
-When defining `write` for `` `=>C` ``, the type system can take the to be `given` argument of type `R` into account to check type correctness.
+When defining `write` for `` `?=>C` ``, the type system can take the to be `given` argument of type `R` into account to check type correctness.
 
 Note that the `given` has name `givenReadingTransformedWriting`.
 
@@ -1977,17 +2050,16 @@ import plp.external.specification.program.Program
 
 import plp.external.implementation.active.Active
 
-import plp.internal.specification.naturalTransformation.~>
+import plp.internal.specification.contextNaturalTransformation.?~>
 
 import plp.internal.specification.computation.Computation
 
 private[plp] given Computation[Active] with
 
-  private[plp] def `i~>c`: I ~> Active =
+  private[plp] def `i?~>c`: I ?~> Active =
     new {
-      override private[plp] def apply[Z]: I[Z] => Active[Z] =
-        z =>
-          z
+      override private[plp] def apply[Z]: I[Z] ?=> Active[Z] =
+        summon[Z]
     }
     
   private[plp] def bind[Z, Y](
@@ -2009,12 +2081,11 @@ import plp.external.specification.materialization.Materialization
 import plp.external.implementation.active.`=>A`
 
 given Materialization[`=>A`, Unit, Unit] with
-  val materialize: (Unit `=>A` Unit) => Unit ?=> Unit =
-    `u>-->u` => 
-      `u>-->u`(summon[Unit])
+  override val materialize = 
+    identity[Unit ?=> Unit]
 ```
 
-Defining `materialize` is trivial and uses `summon[Unit]`.
+Defining `materialize` is trivial as well.
 
 Let's add `Reading` and `Writing`, and corresponding `Materialization`.
 
@@ -2265,8 +2336,6 @@ import plp.external.implementation.active.writing.`=>AW`
 
 import plp.external.implementation.active.writing.reading.`=>AWR`
 
-import plp.external.implementation.active.writing.reading.ActiveWritingReading
-
 import plp.internal.specification.computation.Computation
 
 import plp.external.implementation.active.writing.{
@@ -2277,8 +2346,6 @@ import plp.external.implementation.active.writing.{
   given Materialization[`=>AW`[?], Unit, (?, Unit)]
 }
 
-import plp.internal.implementation.computation.transformation.reading.givenReadingTransformedMaterialization
-
 given [
   W: Writable
   , R
@@ -2288,13 +2355,8 @@ given [
   , R ?=> (W, Unit)
 ] with 
 
-  type `=>AWR[W,R]` = [Z, Y] =>> Z => ActiveWritingReading[W, R][Y]
-    
-  override val materialize: (Unit `=>AWR[W,R]` Unit) => Unit ?=> R ?=> (W, Unit) =        
-    `u=>awru` => 
-      givenReadingTransformedMaterialization.materialize(`u=>awru`) match {
-        case (w, (_, u)) => (w, u)
-      }
+  override val materialize = 
+    identity
 ```
 
 Note that the definition of `materialize` uses pattern matching to get rid of a nested tuple component of type `W` with value `nothing`.
