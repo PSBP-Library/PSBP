@@ -23,9 +23,9 @@ private[plp] given givenWritingTransformedWriting[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i?~>c` => `i?~>d`
+    result => resultD
   }
 
   override def write: W `=>C` Unit =
     given (W, Unit) = (summon[W], ())
-    `i?~>d`.apply // ((summon[W], ()))
+    resultD // .apply // ((summon[W], ()))

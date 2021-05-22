@@ -22,7 +22,7 @@ private[plp] trait Binding[C[+ _]]
     private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
       bind(cz, `z=>cy`)
         
-  private[plp] def join[Z]: CC ?~> C =
+  override private[plp] def `cc?~>c`: CC ?~> C =
     new {
       override private[plp] def apply[Z]: CC[Z] ?=> C[Z] =
         summon[CC[Z]] >= 

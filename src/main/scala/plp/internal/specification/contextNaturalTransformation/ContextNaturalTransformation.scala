@@ -10,9 +10,8 @@ extension [F[+ _], G[+ _], H[+ _]] (`f?~>g`: F ?~> G)
   private[plp] def ?~>(`g?~>h`: => G ?~> H): F ?~> H =
     new {
       override private[plp] def apply[Z]: F[Z] ?=> H[Z] =
-        given gz: G[Z] = `f?~>g`.apply
+        given G[Z] = `f?~>g`.apply
         `g?~>h`.apply
-        // `f~>g`.apply andThen `g~>h`.apply
     }
 
   

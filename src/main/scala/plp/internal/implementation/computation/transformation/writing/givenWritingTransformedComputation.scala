@@ -26,7 +26,7 @@ private[plp] given givenWritingTransformedComputation[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i?~>c` => `i?~>d`
+    result => resultD
     , bind => bindD
   }
 
@@ -38,13 +38,12 @@ private[plp] given givenWritingTransformedComputation[
 
   override private[plp] val `d?~>c`: D ?~> C = new {
     def apply[Z]: D[Z] ?=> C[Z] =
-      // dz =>
-        bindD(
-          summon[D[Z]]
-          , z => 
-              given (W && Z) = (nothing, z)
-              `i?~>d`.apply // ((nothing, z))
-        )
+      bindD(
+        summon[D[Z]]
+        , z => 
+            given (W && Z) = (nothing, z)
+            resultD // .apply
+      )
   }  
 
   override private[plp] def bind[Z, Y](
@@ -54,5 +53,5 @@ private[plp] given givenWritingTransformedComputation[
     bindD(cz, (w1, z) =>
       val (w2, y): W && Y = `z=>cy`(z)
       given (W && Y) = (append(w1, w2), y)
-      `i?~>d`.apply
+      resultD // .apply
     )

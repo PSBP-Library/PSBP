@@ -35,7 +35,7 @@ private[plp] given givenWritingTransformedMaterialization[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    `i?~>c` => `i?~>d`
+    result => resultD
     , bind => bindD 
   }  
 
@@ -45,10 +45,9 @@ private[plp] given givenWritingTransformedMaterialization[
       bindD(
         `u=>cu`
         , (w, _) =>
-          // val y = materializeF(`i?~>d`.apply(u))
-          val y = materializeF(`i?~>d`.apply)
+          val y = materializeF(resultD)
           given (W, Y) = (w, y)
-          `i?~>d`.apply // ((w, y))
+          resultD
       )
 
 

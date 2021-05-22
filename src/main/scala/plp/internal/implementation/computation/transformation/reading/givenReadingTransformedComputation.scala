@@ -29,8 +29,6 @@ private[plp] given givenReadingTransformedComputation[
     new {
       def apply[Z]: D[Z] ?=> C[Z] =
         summon[D[Z]]
-        // dz => 
-          // dz
     }  
 
   override private[plp] def bind[Z, Y](
