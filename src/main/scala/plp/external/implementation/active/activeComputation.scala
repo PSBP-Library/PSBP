@@ -16,7 +16,7 @@ private[plp] given Computation[Active] with
         summon[Z]
     }
     
-  private[plp] def bind[Z, Y](
+  override private[plp] def bind[Z, Y](
     cz: Active[Z]
     , `z=>cy`: => Z => Active[Y]
   ): Active[Y] =

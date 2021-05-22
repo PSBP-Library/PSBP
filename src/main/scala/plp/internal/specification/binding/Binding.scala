@@ -18,6 +18,10 @@ private[plp] trait Binding[C[+ _]]
 
   // defined
 
+  private[plp] def binding[Z, Y] (`z?=>cy`: => Z ?=> C[Y])(using cz: C[Z]): C[Y] =
+    import plp.external.implementation.toFunction
+    bind(cz, toFunction(`z?=>cy`))  
+
   extension [Z, Y] (cz: C[Z]) 
     private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
       bind(cz, `z=>cy`)
