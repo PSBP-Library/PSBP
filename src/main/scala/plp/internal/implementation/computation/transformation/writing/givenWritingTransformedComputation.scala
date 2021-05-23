@@ -51,7 +51,18 @@ private[plp] given givenWritingTransformedComputation[
     , `z=>cy`: => Z => C[Y]
   ): C[Y] =
     bindD(cz, (w1, z) =>
-      val (w2, y): W && Y = `z=>cy`(z)
-      given (W && Y) = (append(w1, w2), y)
-      resultD
+      bindD(`z=>cy`(z), (w2, y) =>
+        given (W && Y) = (append(w1, w2), y)
+        resultD
+      )
     )
+
+  // override private[plp] def bind[Z, Y](
+  //   cz: C[Z]
+  //   , `z=>cy`: => Z => C[Y]
+  // ): C[Y] =
+  //   bindD(cz, (w1, z) =>
+  //     val (w2, y): W && Y = `z=>cy`(z)
+  //     given (W && Y) = (append(w1, w2), y)
+  //     resultD
+  //   )
