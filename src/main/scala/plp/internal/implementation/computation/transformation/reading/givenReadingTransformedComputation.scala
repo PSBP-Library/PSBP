@@ -20,17 +20,18 @@ private[plp] given givenReadingTransformedComputation[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    bind => bindD
+    binding => bindingD
   }
 
   override private[plp] val `d?~>c`: D ?~> C = 
     new {
       def apply[Z]: D[Z] ?=> C[Z] =
         summon[D[Z]]
-    }  
+    } 
 
-  override private[plp] def bind[Z, Y](
-    cz: C[Z]
-    , `z=>cy`: => Z => C[Y]
-  ): C[Y] =
-    bindD(cz, z => `z=>cy`(z))
+  import plp.external.implementation.{ toFunction, fromFunction }
+
+  override private[plp] def binding[Z, Y]: C[Z] ?=> (Z ?=> C[Y]) => C[Y] =
+    `z?=>cy` =>
+      val `z=>cy`: Z => C[Y] = toFunction(`z?=>cy`)
+      bindingD(`z=>cy`(summon[Z]))

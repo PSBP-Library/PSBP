@@ -20,9 +20,13 @@ private[plp] given givenReadingTransformedReading[
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    result => resultD
+    cResult => cResultD
   }
+
+  import plp.external.implementation.toFunction
+
+  import plp.external.implementation.fromFunction
 
   override def read: Unit `?=>C` R =
     given Unit = ()
-    resultD
+    cResultD

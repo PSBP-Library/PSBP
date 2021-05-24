@@ -28,24 +28,30 @@ private[plp] given givenReadingTransformedMaterialization[
 
   private val materialization = summon[Materialization[`?=>D`, Z, Y]]
   import materialization.{ 
-    materialize => materializeF 
+    materialize => materializeD 
   }
 
   private val computation = summon[Computation[D]]
   import computation.{ 
-    result => resultD
-    , bind => bindD 
+    cResult => cResultD
+    , result => resultD
+    , binding => bindingD 
   }
+
+  // override val materialize: (Unit `?=>C` Unit) => Z ?=> (R ?=> D[Y]) =
+  //   `u?=>cu` =>
+  //     given u: Unit = ()
+  //     given D[Unit] = `u?=>cu`
+  //     bindingD{
+  //       given Y = materializeD(resultD)
+  //       resultD
+  //     }  
+  
+  // import plp.external.implementation.toFunction
 
   override val materialize: (Unit `?=>C` Unit) => Z ?=> (R ?=> D[Y]) =
     `u?=>cu` =>
       given u: Unit = ()
-      bindD(
-        `u?=>cu`
-        , _ =>
-          given Y = materializeF(resultD)
-          resultD
-      )
-
-
-  
+      given D[Unit] = `u?=>cu`
+      bindingD(resultD(materializeD(cResultD)))
+       

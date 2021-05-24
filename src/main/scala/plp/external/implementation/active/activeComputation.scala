@@ -15,12 +15,15 @@ private[plp] given Computation[Active] with
       override private[plp] def apply[Z]: I[Z] ?=> Active[Z] =
         summon[Z]
     }
+
+  override private[plp] def binding[Z, Y]: Active[Z] ?=> (Z ?=> Active[Y]) => Active[Y] =
+    identity  
     
-  override private[plp] def bind[Z, Y](
-    cz: Active[Z]
-    , `z=>cy`: => Z => Active[Y]
-  ): Active[Y] =
-    `z=>cy`(cz)
+  // override private[plp] def bind[Z, Y](
+  //   cz: Active[Z]
+  //   , `z=>cy`: => Z => Active[Y]
+  // ): Active[Y] =
+  //   `z=>cy`(cz)
 
 // import plp.external.implementation.computation.programFromComputation
 

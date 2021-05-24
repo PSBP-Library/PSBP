@@ -26,6 +26,14 @@ private[plp] given givenWritingTransformedWriting[
     result => resultD
   }
 
+  import plp.external.implementation.toFunction
+
   override def write: W `?=>C` Unit =
-    given (W, Unit) = (summon[W], ())
-    resultD
+    resultD((summon[W], ()))
+    
+    // given (W, Unit) = (summon[W], ())
+    // resultD
+
+  // override def write: W `?=>C` Unit =
+  //   given (W, Unit) = (summon[W], ())
+  //   resultD

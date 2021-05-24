@@ -11,21 +11,40 @@ private[plp] trait Binding[C[+ _]]
 
   // declared
 
-  private[plp] def bind[Z, Y] (
-    cz: C[Z]
-    , `z=>cy`: => Z => C[Y]
-  ): C[Y]
+  // private[plp] def bind[Z, Y] (
+  //   cz: C[Z]
+  //   , `z=>cy`: => Z => C[Y]
+  // ): C[Y]
 
   // defined
 
-  private[plp] def binding[Z, Y] (`z?=>cy`: => Z ?=> C[Y])(using cz: C[Z]): C[Y] =
-    import plp.external.implementation.toFunction
-    bind(cz, toFunction(`z?=>cy`))  
+  import plp.external.implementation.{ toFunction, fromFunction }
+
+  private[plp] def lift[Z, Y]: (Z => C[Y]) => (C[Z] => C[Y]) =
+    `z=>dy` =>
+      toFunction(binding(fromFunction(`z=>dy`)))      
+
+  private[plp] def binding[Z, Y]: C[Z] ?=> (Z ?=> C[Y]) => C[Y]
+
+  // extension [Z, Y] (cz: C[Z]) 
+  //   private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
+  //     given C[Z] = cz
+  //     binding(`z=>cy`(summon[Z]))
+  
+  // extension [Z, Y] (cz: C[Z]) 
+  //   private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
+  //     given C[Z] = cz
+  //     binding(fromFunction(`z=>cy`))
 
   extension [Z, Y] (cz: C[Z]) 
     private[plp] def >=(`z=>cy`: => Z => C[Y]): C[Y] =
-      bind(cz, `z=>cy`)
-        
+      lift(`z=>cy`)(cz)
+      // toFunction(binding(fromFunction(`z=>cy`)))(cz)      
+
+  // extension [Z, Y] (cz: C[Z]) 
+  //   private[plp] def >=?(`z?=>cy`: => Z ?=> C[Y]): C[Y] =
+  //     toFunction(binding(`z?=>cy`))(cz) 
+
   override private[plp] def `cc?~>c`: CC ?~> C =
     new {
       override private[plp] def apply[Z]: CC[Z] ?=> C[Z] =

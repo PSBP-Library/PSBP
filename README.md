@@ -50,11 +50,175 @@ Functional programming is about the mutual recursive relation between *functions
 
 A function can be defined in terms of an expression using *abstraction*.
 
-The obtained function has a *function parameter* corresponding to the *unbound name* of the expression.
+```scala
+package introduction
 
-An expression can be defined in terms of a function using *application*.
+def expression[Z, Y](unboundIdentifier: Z): Y = ??? 
+```
 
-An expression is obtained by *binding* a *function argument expression* to the function parameter.
+```scala
+package introduction
+
+def functionInTermsOfExpression[Z, Y]: Z => Y = 
+  val abstraction =
+    (parameter: Z) => 
+      expression(unboundIdentifier = parameter)
+  abstraction 
+```
+
+A function has a *parameter* corresponding to the *unbound identifier* of an expression.
+
+An expression can be defined in terms of a function using *binding*.
+
+```scala
+package introduction
+
+def function[Z, Y]: Z => Y = parameter => ???
+```
+
+```scala
+package introduction
+
+def expressionInTermsOfFunction[Z, Y](parameter: Z): Y = 
+  val expression =
+    val argument = parameter
+    val result = argument bind function
+    result
+  expression     
+```
+
+where
+
+```scala
+package introduction
+
+extension [Z, Y] (parameter: Z) 
+  def bind(function: Z => Y): Y =
+    function apply parameter
+```
+
+An expression is obtained by binding an *argument* to the parameter of the function to obtain a *result*.
+
+Functional programming is, perhaps, even more about the mutual recursive relation between *context functions* and *expressions*.
+
+A context function can be defined in terms of an expression using an *expression context*
+
+```scala
+package introduction
+
+def contextFunctionInTermsOfExpression[Z]: Z ?=> Nothing = 
+  val expressionContext =
+    val hole = summon[Z]
+    expression(hole)
+  expressionContext
+```
+
+An context function is an expression with a *hole* in it that *summons for a value*.
+
+An expression can be defined in terms of a context function. 
+
+```scala
+package introduction
+
+def contextFunction[Z]: Z ?=> Nothing = ???
+```
+
+```scala
+package introduction
+
+def expressionInTermsOfContextFunction[Z](value: Z): Nothing = 
+  val expression =
+    given hole: Z = value
+    contextFunction
+  expression
+```
+
+An expression is obtained by *giving a value* for the hole of the context function.
+
+As for as the type system is concerned, context functions can be used as values
+
+```scala
+package introduction
+
+object contextFunctionAsValue {
+  def contextFunction[Z, Y]: Z ?=> Y = ??? 
+
+  def value[Y]: Y = contextFunction
+}
+```
+
+As for as the type system is concerned, values can be used as context functions
+
+```scala
+package introduction
+
+object valueAsContextFunction {
+  def value[Y]: Y = ???
+
+  def contextFunction[Z, Y]: Z ?=> Y = value
+}
+```
+
+## A complete context function example
+
+Below are two context functions, `hello` and `goodbye`.
+
+```scala
+package introduction.contextFunctionExample
+
+def hello: String ?=> String = 
+  s"Hello, ${summon[String]}"
+
+def goodbye: String ?=> String = 
+  s"Goodbye, ${summon[String]}"
+```
+
+They are used by `printlnWithGreeting` to print a value with a greeting.
+
+```scala
+package introduction.contextFunctionExample
+
+def printlnWithGreeting[Z](value: Z): String ?=> Unit = 
+  val helloValue: String = hello
+  val goodbyeValue: String = goodbye
+  println(s"$helloValue\n$value\n$goodbyeValue")
+```
+
+Note that `hello` and `goodbye` are used as string values in `printlnWithGreeting`,
+
+A `String` to be given for the hole of `hello` and `goodbye` can be defined as follows
+
+```scala
+package introduction.contextFunctionExample
+
+given String = "World!"
+```
+
+And `printlnWithGreeting` can be used in `@main` code as follows.
+
+```scala
+package introduction.contextFunctionExample
+
+import introduction.contextFunctionExample.{ given String }
+
+@main def printlnWithGreetingMain(args: String*): Unit =
+  
+  case object contextFunctionExample
+
+  printlnWithGreeting(contextFunctionExample)
+```
+
+Let's run it
+
+```scala
+[info] running introduction.contextFunctionExample.printlnWithGreetingMain 
+Hello, World!
+contextFunctionExample
+Goodbye, World!
+[success] 
+```
+
+Note that `printlnWithGreetingMain` uses dependency injection by `import` of the `given String`.
 
 ## The essence of functional programming
 
@@ -62,9 +226,9 @@ In 1992, in the *proceedings* of the 19th *Symposium on Principles of programmin
 
 Expressions are generalized to *computations* to deal with *impure computation execution ingredients* that go beyond the *pure expression evaluation ingredients*.
 
-After all, programming is not only about pure functions that
+After all, programming is not only about pure functions resp. context functions that
 
-- *internally*, *always*, *succesfully*, *transform* an *argument* to the *same* *result*
+- *internally*, *always*, *succesfully*, *transform* an *argument* resp. *given value* to the *same* *result*
 
 but also about such things as
 
@@ -72,6 +236,7 @@ but also about such things as
 - *failure handling*, to, *internally*, *sometimes*, deal with *unsuccessful* results,
 
 and
+
 - *input/output*, to, *externally*, deal with *program composition*.
 
 and many more programming capabilities.
@@ -110,7 +275,13 @@ This course generalizes function-level programming to *program-level* programmin
 
 Recall that expressions are generalized to computations to deal with impure capabilities.
 
-Much in the same way functions are generalized to *programs* to deal with impure capabilities.
+Much in the same way context functions are generalized to *programs* to deal with impure capabilities.
+
+Recall that context functions can be seen as expression contexts.
+
+Much in the same way programs can be seen as *computation contexts*.
+
+Note that we simply refer to the generalization of a context function as a program (not a context gprgram). 
 
 So how does this course establish this generalization?
 
@@ -147,40 +318,6 @@ Objects of type `C[Y]`, defined in terms of computation execution ingredients, a
 They are *specifications of generalizations of expressions* of type `Y`.
 
 The internal, `private[plp]`, computing DSL of the `PLP` library is a programming interface for *library* developers.
-
-## Context
-
-A function, `` `z=>y` ``, can be defined using an expression, `e`, as follows
-
-```scala
-def e[Z, Y](z: Z): Y = ???
-
-def `z=>y`[Z, Y]: Z => Y = z => e(z)
-```
-
-You can also make this explicit by using a *context function* of type `Z ?=> Y`.
-
-```scala
-def e[Z, Y](z: Z): Y = ???
-
-def `z?=>y`[Z, Y]: Z ?=> Y = ((z: Z) => e(z))(summon[Z])
-```
-
-You can use `` `z?=>y` `` as an expression of type `Y`.
-
-```scala
-  def `z?=>y`[Z, Y]: Z ?=> Y = ??? 
-
-  def y[Y]: Y = `z?=>y`
-```
-
-You can use `y` as an expression of type `Z ?=> Y`.
-
-```scala
-  def y[Y]: Y = ???
-
-  def `z?=>y`[Z, Y]: Z ?=> Y = y
-```
 
 ## Denotational (context) functions and operational expressions
 

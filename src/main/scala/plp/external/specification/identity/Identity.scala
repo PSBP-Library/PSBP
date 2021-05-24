@@ -4,29 +4,29 @@ trait Identity[>-->[- _, + _]]:
 
   // declared
 
-  def identity[Z]: Z >--> Z
+  def id[Z]: Z >--> Z
 
   // defined
 
   def `z>-->z`[Z]: Z >--> Z =
-    identity
+    id
 
   def `y>-->y`[Y]: Y >--> Y =
-    identity
+    id
 
   def `x>-->x`[X]: X >--> X =
-    identity      
+    id      
   
   def `w>-->w`[W]: W >--> W =
-    identity
+    id
 
   def `v>-->v`[V]: V >--> V =
-    identity 
+    id 
 
   // ...
 
   def `u>-->u`: Unit >--> Unit =
-    identity
+    id
 
   // ... 
 

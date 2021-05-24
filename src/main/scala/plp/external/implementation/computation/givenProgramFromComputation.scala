@@ -11,6 +11,8 @@ import plp.external.specification.program.Program
 
 import plp.external.implementation.toFunction
 
+import plp.external.implementation.fromFunction
+
 import plp.internal.specification.computation.Computation
 
 private[plp] given givenProgramFromComputation[
@@ -19,34 +21,37 @@ private[plp] given givenProgramFromComputation[
   
   private val computation = 
     summon[Computation[C]]
-  import computation.result
+  import computation.{
+    cResult
+    , result
+  }
 
   private type `=>C`[-Z, +Y] = ProgramFromComputation[C][Z, Y]
 
   // defined
 
-  override def identity[Z]: Z `=>C` Z =
-    result
+  override def id[Z]: Z `=>C` Z =
+    cResult
+
+  // private def resultFunction[Z]: Z => C[Z] =
+  //   toFunction(cResult)
   
   override def andThen[Z, Y, X](
     `z>-->y`: Z `=>C` Y
     , `y>-->x`: => Y `=>C` X): Z `=>C` X =
-      `z>-->y` >= toFunction(`y>-->x`)  
+      `z>-->y` >= 
+        toFunction(`y>-->x`)
 
   override def toProgram[Z, Y]: (Z => Y) => (Z `=>C` Y) = 
     `z=>y` => 
-      given Y = `z=>y`(summon[Z])
-      identity
+      result(fromFunction(`z=>y`))
 
   override def construct[Z, Y, X](
       `z>-->y`: Z `=>C` Y
       , `z>-->x`: => Z `=>C` X): Z `=>C` (Y && X) =
-    `z>-->y` >= {
-      y =>
-      `z>-->x` >= {
-        x =>
-          given (Y, X) = (y, x)
-          identity
+    `z>-->y` >= { y =>
+      `z>-->x` >= { x =>
+        result((y, x))
       }
     }
 

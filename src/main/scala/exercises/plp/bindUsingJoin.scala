@@ -21,7 +21,11 @@ private[plp] def bindUsingJoin[
   val lifting: FunctionLifting[C] = summon[FunctionLifting[C]]
   import lifting.lift
 
-  given C[C[Y]] = lift(`z=>cy`)(cz)
+  import plp.external.implementation.toFunction
 
-  join
+  join(lift(`z=>cy`)(cz))
+
+  // given C[C[Y]] = lift(`z=>cy`)(cz)
+
+  // cJoin
   
